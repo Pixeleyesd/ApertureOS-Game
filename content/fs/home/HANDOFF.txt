@@ -1,14 +1,15 @@
 Doug,
 
 Welcome to nights. I wish I could walk you through this in person, but the
-fucking review is in two days and I am buried in slides. I'm on site,
-extension 4410, but treat me as a last resort.
+fucking funding review is in two days and I am buried in work. I'm on site,
+extension 4410, but treat me as a last resort. Those damn Black Mesa guys
+are really driving us down the drain.
 
 Here is how tonight goes.
 
-  1. Your assigned ticket is in the tickets folder. Read it properly.
+  1. Your assigned ticket is in the tickets folder. Better read it properly.
   2. Imogen in Facilities sent you a welcome mail. Read that too. She knows
-     where everything is and I don't, lol.
+     where everything is and I don't.
   3. Once you have read both, accept the ticket.
 
 If you lose your place, type  help  and it will tell you what to try. The

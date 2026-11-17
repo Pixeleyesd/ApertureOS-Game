@@ -4,7 +4,7 @@ morality       restrictive. approved for cycle 7, first in order.
 curiosity      approved for cycle 7, second in order.
 intelligence   approved for cycle 7, third in order.
 cake           approved for cycle 7, fourth in order. (requested by
-               the cafeteria. do not ask.)
+               the cafeteria. don't ask.)
 anger          approved for cycle 7, fifth in order.
 
 All cores are inserted by hand and only by the evaluating technician.
