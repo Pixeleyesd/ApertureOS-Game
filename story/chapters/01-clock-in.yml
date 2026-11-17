@@ -1,0 +1,100 @@
+# chapter 1: the tutorial that never calls itself one.
+# the player learns ls, cat, cd, mail and help by following the handoff note.
+
+id: clock-in
+title: Clock in
+
+# shown by  ticket show  and  help
+ticket:
+  number: 4417
+  title: Reactivate central system, evaluation cycle 7
+
+# the checklist. each step ticks itself off when its  done  condition is true.
+# hints go from vague to "type exactly this". the final step is the one  ticket accept  skips.
+steps:
+  - text: Look around your home folder
+    done: ran "ls" or ran "tree"
+    hints:
+      - There is a command that lists what is in a folder. It is only two letters.
+      - The command is ls. Type it and press Enter.
+      - Type  ls  and press Enter.
+
+  - text: Read the handoff note from Dr. Brandt
+    done: read "~/HANDOFF.txt"
+    hints:
+      - Look at the files in your home folder. One has a name in capital letters. A command called cat shows what is inside a file.
+      - The file is called HANDOFF.txt. Use cat followed by the file name.
+      - Type  cat HANDOFF.txt  and press Enter.
+
+  - text: Open the tickets folder
+    done: visited "~/tickets"
+    hints:
+      - There is a folder called tickets. The command to move into a folder is cd.
+      - cd needs the name of the folder after it.
+      - Type  cd tickets  and press Enter.
+
+  - text: Read ticket 4417
+    done: read "~/tickets/4417.txt"
+    hints:
+      - Use ls to see what is in the tickets folder. Open the one that is not in the closed folder.
+      - The file is called 4417.txt. Use cat on it.
+      - Type  cat 4417.txt  and press Enter.
+
+  - text: Read Imogen's welcome mail
+    done: mail_read "imogen-welcome"
+    hints:
+      - Your messages are in a mailbox. The command is the same word.
+      - Type  mail  to see the list, then open a message by its number.
+      - Type  mail  and press Enter, then  mail 1  to open the message.
+
+  - text: Accept the ticket
+    final: true
+    done: flag.ticket_accepted
+    hints:
+      - Once you have read everything, tickets have their own command. Try  ticket show  to see what is left.
+      - The command is ticket, and you want to accept it.
+      - Type  ticket accept  and press Enter.
+
+on_start:
+  - mail: imogen-welcome
+
+beats:
+  - id: welcome
+    when: true
+    do:
+      - tip: Beginner mode is on, so you will see [tip] lines like this one. Type  beginner off  to hide them.
+      - tip: Not sure where to start? Type  help  and press Enter.
+
+  - id: after-ls
+    when: ran "ls" or ran "tree"
+    do:
+      - tip: Names ending in / are folders. To read a file, type  cat  and its name, like  cat HANDOFF.txt
+
+  - id: after-handoff
+    when: read "~/HANDOFF.txt"
+    do:
+      - tip: Tickets live in a folder called tickets. Go in with  cd tickets
+
+  - id: in-tickets
+    when: cwd "~/tickets"
+    do:
+      - tip: Type  ls  to see what is here, then  cat 4417.txt  to read the open ticket.
+
+  - id: after-ticket
+    when: read "~/tickets/4417.txt"
+    do:
+      - log: [facility.log, "annex-03: drattman opened ticket 4417"]
+      - tip: Good. Now check your mail. Type  mail  to see your inbox, then  mail 1  to open a message.
+
+  - id: after-mail
+    when: mail_read "imogen-welcome"
+    do:
+      - tip: When you have read everything, type  ticket accept  to take the ticket.
+
+done_when: flag.ticket_accepted
+
+on_done:
+  - unlock: /opt/aperture/runbooks
+  - say: |
+      Runbook access granted: /opt/aperture/runbooks
+      Dr. Brandt said to read it before you touch anything else.

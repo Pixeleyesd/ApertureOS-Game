@@ -1,6 +1,13 @@
+/* amber on dark brown. the first two are the main colours; the rest are
+   slightly different shades of the same amber so the screen is easier to follow. */
 :root {
   --bg: #2b1400;
-  --fg: #f8b400;
+  --fg: #f8b400;      /* normal output */
+  --cmd: #ffd97a;     /* what you type */
+  --user: #ff9b3d;    /* user@host in the prompt */
+  --path: #ffe9b8;    /* the folder in the prompt, and folder names in ls */
+  --dim: #b88500;     /* tips and help-desk lines */
+  --err: #ff6a55;     /* errors */
 }
 
 html, body {
@@ -25,6 +32,16 @@ body {
   word-break: break-word;
 }
 
+.user { color: var(--user); font-weight: bold; }
+.path { color: var(--path); font-weight: bold; }
+.cmd  { color: var(--cmd); }
+.dir  { color: var(--path); font-weight: bold; }
+
+.tip  { color: var(--dim); }
+.wall { color: var(--cmd); font-weight: bold; }
+.err  { color: var(--err); }
+.err .soft { color: var(--dim); }
+
 #line {
   display: flex;
 }
@@ -42,9 +59,9 @@ body {
   border: 0;
   outline: 0;
   background: transparent;
-  color: inherit;
+  color: var(--cmd);
   font: inherit;
-  caret-color: var(--fg);
+  caret-color: var(--cmd);
   caret-shape: block;
 }
 

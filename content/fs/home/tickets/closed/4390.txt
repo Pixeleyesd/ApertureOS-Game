@@ -1,0 +1,5 @@
+TICKET #4390
+Title:    Ceiling tile dripping, annex desk 3
+Opened:   Facilities (I. Farrow)
+Status:   CLOSED
+Resolution: Bucket placed. Tile "monitored". Do not move the bucket.
