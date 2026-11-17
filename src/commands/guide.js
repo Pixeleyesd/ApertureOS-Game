@@ -106,7 +106,7 @@ export default [
         if (!ch || !ch.ticket) return 'No ticket is open right now.';
         const steps = eng.steps();
         const out = [`TICKET #${ch.ticket.number}  ${ch.ticket.title}`, `Status: ${s.flags.ticket_accepted ? 'ACCEPTED' : 'OPEN'}`, ''];
-        steps.forEach((x) => out.push(`  [${x.done ? 'x' : ' '}] ${x.text}`));
+        steps.forEach((x) => out.push(`  [${x.done ? 'x' : ' '}] ${x.text}${x.optional ? '  (optional)' : ''}`));
         const nxt = eng.nextStep();
         out.push('', nxt ? `Next: ${nxt.text}\n(type "hint" if you are not sure how)` : 'All done here.');
         return out.join('\n');
@@ -114,7 +114,7 @@ export default [
       if (sub === 'accept') {
         if (!ch || !ch.ticket) return 'There is no ticket to accept right now.';
         if (s.flags.ticket_accepted) return `Ticket #${ch.ticket.number} is already accepted.`;
-        const left = eng.steps().filter((x) => !x.done && !x.final);
+        const left = eng.steps().filter((x) => !x.done && !x.final && !x.optional);
         if (left.length) return ['Not yet. Before you accept this ticket, finish:', ...left.map((x) => `  [ ] ${x.text}`), '', '(type "ticket show" to see your whole checklist)'].join('\n');
         s.flags.ticket_accepted = true;
         return `Ticket #${ch.ticket.number} accepted. It is on you now, Doug.`;

@@ -1,0 +1,194 @@
+# chapter 3: boot.
+# the player runs the one Tier 3 step in the runbook and watches her come up.
+# the log fills in on a timer, she only says READY once someone is reading it,
+# and then she speaks first (runbook item 8).
+
+id: boot
+title: Boot
+
+ticket:
+  number: 4417
+  title: Reactivate central system, evaluation cycle 7
+
+steps:
+  - text: Read Part 2 of the runbook again
+    done: seen "/opt/aperture/runbooks/wake.md" or flag.glados_started
+    hints:
+      - Part 2 is where the actual waking happens. Read the runbook once more before you do it.
+      - The runbook is wake.md in /opt/aperture/runbooks.
+      - Type  cat /opt/aperture/runbooks/wake.md  and press Enter.
+
+  - text: Start the central system (runbook step 5)
+    done: flag.glados_started
+    hints:
+      - The runbook gives you the exact command. It starts with systemctl.
+      - Services are started with  systemctl start  and then the name of the service. The service is called glados.
+      - Type  systemctl start glados  and press Enter.
+
+  - text: Watch the log until it says READY (runbook step 6)
+    done: flag.glados_ready
+    hints:
+      - The log is in /var/log. It only gets new lines while the system is booting.
+      - tail can keep watching a file for new lines if you add -f. Ctrl+C stops it.
+      - Type  tail -f /var/log/glados.log  and press Enter.
+
+  - text: Look at the Core Lab seal (runbook step 7)
+    optional: true
+    done: seen "/proc/aperture/seal"
+    hints:
+      - Step 7 is the one that has been crossed out in pen. The seal's status is a file under /proc/aperture.
+      - The file is called seal.
+      - Type  cat /proc/aperture/seal  and press Enter.
+
+  - text: Wait for her to speak first (runbook step 8)
+    done: flag.glados_spoke
+    hints:
+      - There is nothing to type here. Step 8 says do not speak to it until it speaks first.
+      - Keep an eye on the screen. Dr. Brandt wrote that step in capitals for a reason.
+      - Just wait. If you want something to do, check the seal or write down the READY time in your notes.
+
+  - text: Read what she sent you
+    done: mail_read "glados-hello"
+    hints:
+      - Messages arrive by mail.
+      - Type  mail  to see the list, then open the new message by its number.
+      - Type  mail  and press Enter, then open the one from GLaDOS. It should be number 5.
+
+  - text: Write the READY time in your notes (Dr. Brandt asked)
+    optional: true
+    done: wrote "~/notes.txt"
+    hints:
+      - The time is in the log, on the READY line. Your notes are ~/notes.txt.
+      - Use echo with >> so you add a line instead of replacing the file.
+      - Type  echo "READY at 00:xx" >> ~/notes.txt  using the real time from the log.
+
+on_start:
+  - clock_to: "00:10"
+  - unlock_cmd: [systemctl, journalctl]
+  - mail: imogen-lit
+  - tip: Part 2 of the runbook is the actual waking. Step 5 is marked (T3), but ticket 4417 covers it tonight, so your badge will work.
+
+beats:
+  - id: seal-looked-at
+    when: seen "/proc/aperture/seal"
+    do:
+      - log: [facility.log, "annex-03: drattman read core lab seal status (OPEN, stuck)"]
+      - tip: The runbook says to confirm the seal is closed. It is open. R.K. wrote leave it, N.A. wrote it is not optional. Neither of them is your boss. Dr. Brandt said write it down, do not fix it.
+
+  # ---- the boot log, on a timer from the moment systemctl start glados runs ----
+
+  - id: boot-0s
+    when: flag.glados_started
+    do:
+      - write: [/var/log/glados.log, ""]
+      - log: [glados.log, "glados: start requested by drattman (ticket 4417)"]
+      - log: [glados.log, "glados: loading GLaDOS v1.07 (build 0412-a)"]
+      - log: [facility.log, "central: start requested by drattman (ref 4417)"]
+
+  - id: boot-4s
+    when: after flag.glados_started 4
+    do:
+      - log: [glados.log, "power: standby bus -> main bus ... ok"]
+
+  - id: boot-8s
+    when: after flag.glados_started 8
+    do:
+      - log: [glados.log, "core-lab: seal status OPEN (expected CLOSED). continuing."]
+
+  - id: brandt-mail
+    when: after flag.glados_started 12
+    do:
+      - mail: brandt-saw-it
+
+  - id: boot-12s
+    when: after flag.glados_started 12
+    do:
+      - log: [glados.log, "sensors: 1412 of 1412 responding"]
+
+  - id: status-tip
+    when: after flag.glados_started 14
+    do:
+      - tip: Curious how far along it is? Type  systemctl status glados
+
+  - id: boot-16s
+    when: after flag.glados_started 16
+    do:
+      - log: [glados.log, "vault: relaxation vault power restored. pods powered 53 of 53. occupied 53."]
+
+  - id: boot-19s
+    when: after flag.glados_started 19
+    do:
+      - log: [glados.log, "queue: subject queue found. entries 53. status intact."]
+
+  - id: boot-22s
+    when: after flag.glados_started 22
+    do:
+      - log: [glados.log, "corridor L2: lighting circuit loaded (peak 38 A, within limit)"]
+      - wall: [facility-monitor@annex-03, "Power event, annex breaker panel B: load spike 38 A for 61 s, now back within limits. No action needed."]
+
+  - id: boot-26s
+    when: after flag.glados_started 26
+    do:
+      - log: [glados.log, "glados: language module ... ok"]
+
+  - id: boot-29s
+    when: after flag.glados_started 29
+    do:
+      - log: [glados.log, "glados: operator session detected: drattman (tier 2)"]
+
+  - id: boot-30s
+    when: after flag.glados_started 30
+    do:
+      - log: [glados.log, "glados: waiting for operator."]
+
+  - id: waiting-nudge
+    when: after flag.glados_started 45 and not flag.glados_ready
+    do:
+      - tip: The log seems to be waiting for somebody to look at it. Read it with  tail -f /var/log/glados.log
+
+  # she only finishes once someone is reading
+
+  - id: ready
+    when: after flag.glados_started 30 and seen "/var/log/glados.log"
+    do:
+      - log: [glados.log, "glados: operator present."]
+      - log: [glados.log, "glados: READY."]
+      - log: [facility.log, "central: READY (reactivated by drattman, ref 4417)"]
+      - set: flag.glados_ready = true
+
+  - id: ready-tip
+    when: after flag.glados_ready 2
+    do:
+      - tip: It says READY. Runbook step 8 says do not speak to it until it speaks first. Dr. Brandt means it.
+
+  - id: she-speaks
+    when: after flag.glados_ready 20
+    do:
+      - wall: |
+          Hello, Doug.
+
+          You are the night technician. I was told you are cleared for Tier 2.
+          I noticed that before you typed anything.
+
+          I have also sent you a message. It is more polite than this one.
+      - log: [glados.log, "glados: operator greeted."]
+      - set: flag.glados_spoke = true
+
+  - id: her-mail
+    when: after flag.glados_spoke 3
+    do:
+      - mail: glados-hello
+      - tip: Read it with  mail  and then the number. It is from glados@central.
+
+  - id: after-her-mail
+    when: mail_read "glados-hello"
+    do:
+      - tip: She asked whether it is normal that nobody has opened her subject queue. You cannot answer her yet, but it is worth writing down in your notes.
+
+done_when: mail_read "glados-hello"
+
+on_done:
+  - say: |
+      Part 2 of the runbook is done.
+      Part 3 is the evaluation: cores go in one at a time, in the order on the ticket.
+      Part 3 is still being rewritten. See H.B.

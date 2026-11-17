@@ -25,6 +25,7 @@ export class Terminal {
     this.onLine = () => {};
     this.complete = () => ({ start: 0, matches: [] });
     this.onActivity = () => {};
+    this.onInterrupt = () => {};
 
     this.screen.addEventListener('click', () => { if (!String(window.getSelection())) this.input.focus(); });
     this.input.addEventListener('keydown', (e) => this.key(e));
@@ -115,7 +116,7 @@ export class Terminal {
       const k = e.key.toLowerCase();
       const at = el.selectionStart;
       if (k === 'l') { e.preventDefault(); this.clear(); }
-      else if (k === 'c' && el.selectionStart === el.selectionEnd) { e.preventDefault(); this.echo(el.value + '^C'); el.value = ''; this.pos = this.history.length; }
+      else if (k === 'c' && el.selectionStart === el.selectionEnd) { e.preventDefault(); this.echo(el.value + '^C'); el.value = ''; this.pos = this.history.length; this.onInterrupt(); }
       else if (k === 'a') { e.preventDefault(); el.setSelectionRange(0, 0); }
       else if (k === 'e') { e.preventDefault(); this.cursorEnd(); }
       else if (k === 'u') { e.preventDefault(); el.value = el.value.slice(at); el.setSelectionRange(0, 0); }

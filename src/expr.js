@@ -62,6 +62,12 @@ export function evaluate(src, env) {
       case 'read': return s.read.includes(env.resolve(need('a path')));
       case 'visited': return s.visited.includes(env.resolve(need('a path')));
       case 'wrote': return s.chapterWrote.includes(env.resolve(need('a path')));
+      case 'seen': return (s.chapterRead || []).includes(env.resolve(need('a path')));
+      case 'after': {
+        const f = need('a flag').replace(/^flag\./, '');
+        const n = Number(need('seconds'));
+        return !!s.flags[f] && s.flagAt && s.flagAt[f] !== undefined && s.t - s.flagAt[f] >= n;
+      }
       case 'cwd': return s.cwd === env.resolve(need('a path'));
       case 'idle': return s.idleT >= Number(need('seconds'));
       case 'since': return s.chapterT >= Number(need('seconds'));

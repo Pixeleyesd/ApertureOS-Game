@@ -1,7 +1,7 @@
 // runs the story: chapters, beats, steps, hints, and every action a beat can do.
 
 import { evaluate, normalizeAction } from './expr.js';
-import { clock, fmtDate, fmtShort, fmtStamp, USER } from './state.js';
+import { clock, fmtDate, fmtShort, fmtStamp, setFlag, jumpClock, USER } from './state.js';
 
 export class Engine {
   constructor(world) {
@@ -39,6 +39,7 @@ export class Engine {
     s.chapterT = 0;
     s.chapterRan = [];
     s.chapterWrote = [];
+    s.chapterRead = [];
     s.done = {};
     s.hintLevel = {};
     s.nudged = false;
@@ -118,12 +119,13 @@ export class Engine {
     const ch = this.chapter();
     if (!ch || !Array.isArray(ch.steps)) return [];
     return ch.steps.map((st, i) => ({
-      key: String(i), text: st.text, final: !!st.final, hints: st.hints || [],
+      key: String(i), text: st.text, final: !!st.final, optional: !!st.optional, hints: st.hints || [],
       done: this.test(st.done),
     }));
   }
 
-  nextStep() { return this.steps().find((x) => !x.done) || null; }
+  // optional steps never become "the next step", so help and hint stay on the main path
+  nextStep() { return this.steps().find((x) => !x.done && !x.optional) || null; }
 
   hint() {
     const s = this.state;
@@ -160,10 +162,13 @@ export class Engine {
       tip(args) { if (this.state.flags.beginner) this.print(`[tip] ${String(args.join(' ')).replace(/\n$/, '')}`, 'tip'); },
 
       wall(args) {
+        // wall: text            -> from glados@central
+        // wall: [name, text]     -> from name@central   (or name@host if you write the @ yourself)
         const from = args.length > 1 ? args[0] : 'glados';
         const text = String(args[args.length - 1]).replace(/\n$/, '');
         const d = fmtDate(clock(this.state));
-        this.print(`\nBroadcast message from ${from}@central (${d}):\n\n${text}\n`, 'wall');
+        const sender = String(from).includes('@') ? from : `${from}@central`;
+        this.print(`\nBroadcast message from ${sender} (${d}):\n\n${text}\n`, 'wall');
       },
 
       log(args) {
@@ -190,7 +195,7 @@ export class Engine {
         let v = raw.trim();
         if (v === 'true') v = true; else if (v === 'false') v = false; else if (/^-?\d+$/.test(v)) v = Number(v);
         const s = this.state;
-        if (target.startsWith('flag.')) s.flags[target.slice(5)] = v;
+        if (target.startsWith('flag.')) setFlag(s, target.slice(5), v);
         else if (target.startsWith('gone.')) s.gone[target.slice(5)] = v;
         else if (target === 'headcount') s.headcount = v;
         else if (target === 'core') s.core = v === 'none' ? null : v;
@@ -212,6 +217,7 @@ export class Engine {
       lock_cmd(args) { for (const c of args) this.state.cmds[c] = false; },
       prompt(args) { this.state.prompt = args[0] === undefined || args[0] === 'default' ? null : String(args[0]); },
       goto(args) { this.startChapter(args[0]); },
+      clock_to(args) { jumpClock(this.state, args[0]); },
       next() { const ch = this.chapter(); if (ch) this.finish(ch); },
     };
   }

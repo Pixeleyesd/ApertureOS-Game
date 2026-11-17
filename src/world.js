@@ -72,11 +72,25 @@ export async function createWorld({ load, print, saved = null }) {
   world.shell = new Shell(world, commands);
 
   world.boot = () => {
-    print('Aperture Science Enrichment Center\nMaintenance Annex, terminal 03 (tty1)\n\nlogin: drattman\nLast login: Mon Mar  3 17:02:44 2031 from annex-gate\n');
+    print('Aperture Science Enrichment Center\nMaintenance Annex, terminal 03 (tty1)\n\nlogin: drattman\nLast login: Thu Mar  3 17:02:44 2011 from annex-gate\n');
     print(fs.read('/etc/motd').replace(/\n$/, ''));
     world.engine.startChapter(order[0]);
   };
   world.restore = () => print('Session restored. Type "help" if you need to find your place.');
+
+  // tail -f and journalctl -f: the terminal "follows" a file, printing new lines as the
+  // story adds them, until Ctrl+C (or two minutes, so nobody gets stuck on a phone).
+  world.follow = null;
+  world.startFollow = (abs) => { world.follow = { abs, shown: fs.read(abs).length, ticks: 0 }; };
+  world.stopFollow = () => { world.follow = null; };
+  world.pump = () => {
+    const f = world.follow;
+    if (!f) return;
+    const text = fs.read(f.abs);
+    if (text.length < f.shown) f.shown = text.length;
+    if (text.length > f.shown) { print(text.slice(f.shown).replace(/\n$/, '')); f.shown = text.length; }
+    if (++f.ticks >= 120) { world.follow = null; print('(stopped following after two minutes)'); }
+  };
   world.save = () => JSON.parse(JSON.stringify(state));
   return world;
 }

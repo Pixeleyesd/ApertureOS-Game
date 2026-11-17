@@ -12,6 +12,8 @@ function readFile(ctx, cmd, p) {
   if (ctx.fs.lockedAt(abs)) throw denied(cmd, p);
   if (n.type === 'dir') throw new ShellError(`${cmd}: ${p}: Is a directory\n(Use "ls ${p}" to see what is inside it.)`);
   if (!ctx.state.read.includes(abs)) ctx.state.read.push(abs);
+  const seen = (ctx.state.chapterRead = ctx.state.chapterRead || []);
+  if (!seen.includes(abs)) seen.push(abs);
   return ctx.fs.read(abs);
 }
 
@@ -148,15 +150,18 @@ export default [
   {
     name: 'tail', summary: 'see the end of a file (newest log lines)',
     usage: 'tail [-n lines] <file>',
-    desc: 'Prints the last 10 lines of a file, or the number you ask for. Logs grow at the bottom, so tail shows the newest. The -f option is accepted, but this terminal cannot follow a file live: run tail again to see new lines.',
-    examples: ['tail /var/log/facility.log', 'tail -n 3 /var/log/glados.log'], see: ['head', 'cat'],
+    desc: 'Prints the last 10 lines of a file, or the number you ask for. Logs grow at the bottom, so tail shows the newest. Add -f to keep watching: new lines show up as they are written, until you press Ctrl+C.',
+    examples: ['tail /var/log/facility.log', 'tail -n 3 /var/log/glados.log', 'tail -f /var/log/glados.log'], see: ['head', 'cat', 'journalctl'],
     run(args, ctx) {
       const follow = args.includes('-f');
       const { n, rest } = parseCount(args.filter((a) => a !== '-f'));
+      if (follow && !rest.length) throw new ShellError('tail: -f needs a file to watch. For example:  tail -f /var/log/glados.log');
       const text = rest.length ? readFile(ctx, 'tail', rest[0]) : ctx.stdin || '';
       const l = linesOf(text);
       const out = (n === 0 ? [] : l.slice(-n)).join('\n');
-      return follow ? out + '\n(-f cannot follow live on this terminal. Run tail again to see new lines.)' : out;
+      if (!follow) return out;
+      ctx.w.startFollow(ctx.abs(rest[0]));
+      return (out ? out + '\n' : '') + '(watching for new lines. Press Ctrl+C to stop.)';
     },
   },
 

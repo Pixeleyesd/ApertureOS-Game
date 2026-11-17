@@ -46,6 +46,10 @@ on_done:                 # actions that run as it ends
 
 A beat fires once, the first time its `when` is true. Beats are checked after every command and every second.
 
+A step can be `optional: true`. It still shows in `ticket show` (marked optional) and ticks off, but `help` and `hint` never send the player to it and `ticket accept` doesn't wait for it. Good for "look at this if you're curious" things.
+
+The in-game clock starts at 22:41 on Friday 4 March 2011 and runs in real time. `clock_to` is how the story skips ahead.
+
 ## Conditions
 
 Use in `when`, `done` and `done_when`. Join with `and`, `or`, `not` and brackets.
@@ -57,6 +61,8 @@ Use in `when`, `done` and `done_when`. Join with `and`, `or`, `not` and brackets
 | `read "~/HANDOFF.txt"` | the player has cat/less/head/tail'd that file |
 | `visited "~/tickets"` | the player has been in that folder |
 | `wrote "~/notes.txt"` | the player saved that file this chapter (with `>` or `>>`) |
+| `seen "/var/log/glados.log"` | the player has read that file this chapter (cat, tail, journalctl and so on). `read` is the same but counts every chapter |
+| `after flag.name 30` | that flag was set at least 30 seconds ago. Use it to make things happen on a timer |
 | `cwd "/var/log"` | the player is in that folder right now |
 | `flag.name` | that flag has been set |
 | `idle 45` | no input for 45 seconds |
@@ -88,7 +94,7 @@ Use a `|` block for anything with several lines:
 |---|---|
 | `say: text` | prints text |
 | `tip: text` | prints `[tip] text`, only if beginner mode is on |
-| `wall: text` | prints a broadcast message from glados. `wall: [name, text]` for another sender |
+| `wall: text` | prints a broadcast message from glados. `wall: [name, text]` for another sender (`name@central`), or write the whole address yourself: `wall: [facility-monitor@annex-03, text]` |
 | `log: [file, text]` | adds a timestamped line to `/var/log/file` |
 | `mail: id` | delivers `story/mail/id.yml` and prints "You have new mail." Add `quiet` to skip the message: `mail: [id, quiet]` |
 | `set: flag.name = true` | sets a flag |
@@ -101,6 +107,7 @@ Use a `|` block for anything with several lines:
 | `unlock_cmd: [corectl, report]` | makes locked commands available |
 | `lock_cmd: name` | takes a command away again |
 | `prompt: "{user}@{host}:{cwd}$ "` | changes the prompt. `prompt: default` restores it |
+| `clock_to: "00:10"` | jumps the in-world clock forward to the next time it is 00:10. Use it between chapters so a shift can run from 22:41 to dawn. Mail, logs and `date` all follow it |
 | `goto: chapter-id` | jumps to another chapter right now |
 | `next` | ends this chapter right now |
 

@@ -4,7 +4,7 @@ title: Night Cycle 7
 show_chapter_titles: false
 
 # seconds of doing nothing before the help-desk nudge appears (a chapter can override this)
-idle_nudge: 90
+idle_nudge: 60
 
 # chapters play in this order. each name is a file in story/chapters/
 # a name with no file yet is skipped, so you can list chapters before you write them.

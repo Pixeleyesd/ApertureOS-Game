@@ -44,9 +44,12 @@ async function start() {
 
   term.onActivity = () => { state.idleT = 0; state.nudged = false; };
   term.complete = (before) => shell.complete(before);
+  term.onInterrupt = () => world.stopFollow();
   term.onLine = (line) => {
+    world.stopFollow(); // running anything else ends a tail -f, like leaving it would
     shell.run(line);
     engine.afterCommand(line);
+    world.pump();
     refresh(); save();
   };
   window.addEventListener('resize', refresh);
@@ -61,6 +64,7 @@ async function start() {
   setInterval(() => {
     if (document.hidden) return; // nothing happens while the tab is in the background
     engine.tick(1);
+    world.pump(); // lines for tail -f / journalctl -f
     refresh();
     if (++n % 10 === 0) save();
   }, 1000);

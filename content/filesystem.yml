@@ -16,6 +16,8 @@ files:
     src: etc/hostname
   - path: /etc/aperture.conf
     src: etc/aperture.conf
+  - path: /etc/passwd
+    src: etc/passwd
 
   - path: /home/drattman/HANDOFF.txt
     src: home/HANDOFF.txt
@@ -52,6 +54,8 @@ files:
     dynamic: core
   - path: /proc/aperture/power
     dynamic: power
+  - path: /proc/aperture/seal
+    src: proc/aperture/seal
 
 # closed until a chapter does:  unlock: /path
 locked:

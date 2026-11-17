@@ -16,7 +16,9 @@ You're the night technician. A ticket tells you to reactivate the facility's cen
 
 The whole thing is a real-feeling Linux shell, but friendlier than the real thing. If you've never used a terminal you should still be able to finish it. If you use Linux every day you should find stuff where you expect it.
 
-The story is **linear**. One path from the first login to the last scene. You can wander the filesystem as much as you like, but chapters only move forward when you finish what the current one asks for. The only choices are near the end, and they change the closing scene, not the route.
+The story is **linear**. One path from the first login to the last scene, and one ending. You can wander the filesystem as much as you like, but chapters only move forward when you finish what the current one asks for.
+
+It's set in March 2011, shortly before the events of Portal 1, and it's written so that it leads straight into them. Doug is the Rattman from the comic: he survives GLaDOS's first night, and in the last chapter he does the one thing he can to help the person who comes next.
 
 ---
 
@@ -44,11 +46,9 @@ Twelve people are on shift tonight, including you. By the end the headcount is 1
 
 **9. Lockout.** She takes over your shell. The prompt changes, `sudo` asks her permission, `kill` politely refuses. You can't brute-force your way out, so you use things you picked up from the earlier logs.
 
-**10. Last shift.** The final confrontation, then one of three closing scenes. Doug walks out alive in all of them, but what it costs is different:
+**10. Last shift.** It's just you and her. You try to cut her power and you try to get a message out, and neither works. All you can actually do is choose who she tests on next. Imogen gives you an old login nobody ever deleted, you mount her drive with it, read the list of test subjects, and move one called Chell to the top. Doug stays alive, but he's sealed in the annex. Portal 1 starts after that.
 
-- **Staff of one.** You filed every report honestly. She lets you finish your shift and go home, because you're still useful. You clock out. You're the only one who knows.
-- **Lights out.** You pull her power by hand using what you pieced together from the logs. The whole facility goes dark and you find your way out in the black.
-- **Outside line.** You get a message out through a side channel. Help arrives after sunrise, and you spend the hours until then making sure you're still around to meet it.
+There's a longer, spoiler-heavy plan in `story/OUTLINE.md`, including how it could carry on into the events of Portal 1 if I decide to write that.
 
 Coworkers with their own mail threads: Dr. Brandt (supervisor, nervous), Imogen from facilities (practical, funny, the first to notice something is off), and Tobias in the cafeteria (the cake chapter). The other nine people on shift show up in `who` and in the logs, and that's mostly how you find out what happened to them.
 
@@ -164,8 +164,8 @@ The fake disk:
 └── proc/aperture/      headcount, core, power  (live values)
 ```
 
-Working now: `ls cd pwd cat less head tail grep find tree echo wc clear history man help hint ticket mail who whoami hostname date uptime ps sudo beginner newgame`.
-Locked until the story unlocks them: `systemctl journalctl corectl report wall write kill top crontab last`.
+Working now: `ls cd pwd cat less head tail grep find tree echo wc clear history man help hint ticket mail who whoami hostname date uptime ps sudo beginner newgame`, plus `systemctl` and `journalctl` once chapter 3 unlocks them. `tail -f` and `journalctl -f` really do follow a file live until you press Ctrl+C.
+Locked until the story unlocks them: `corectl report wall write kill top crontab last`.
 A handful of real commands (`rm`, `mv`, `cp`, editors, `ssh`, `curl`, package managers) stay off for good, and each one explains why in-world and what to do instead.
 
 ---
@@ -209,8 +209,8 @@ apertureos/
 ## Order I'm building it in
 
 1. Engine, shell, fake filesystem, saving. **Done.**
-2. Chapters 1 and 2 playable start to finish. **Done.**
-3. Chapters 3 and 4, with `systemctl`, `journalctl`, `corectl` and `report` coming online.
+2. Chapters 1 to 3 playable start to finish. **Done.**
+3. Chapter 4, with `corectl` and `report` coming online.
 4. Chapters 5 to 8.
 5. Lockout and the finale.
 

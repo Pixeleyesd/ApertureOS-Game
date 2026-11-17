@@ -88,9 +88,54 @@ check('notice logged', world.fs.read('/var/log/facility.log').includes('L2 light
 check('mail 2 is the reply', type('mail').includes('re: L2 lighting notice'));
 const fin = type('mail 2');
 check('reply text', fin.includes('Core Lab'));
-check('chapter 2 ends cleanly', fin.includes('Part 1 of the runbook is finished') && fin.includes('end of the chapters written so far'));
+check('chapter 2 hands over to chapter 3', fin.includes('Part 1 of the runbook is finished') && state.chapter === 'boot');
+check('the jump brings mail', fin.includes('You have new mail'));
+const when = type('date');
+check('clock jumped to just after midnight, 2011', when.includes('Mar  5 00:1') && when.includes('2011'));
+
+// ---- chapter 3 ----
+function tick(n) { buf = []; for (let i = 0; i < n; i++) { engine.tick(1); world.pump(); } return buf.join('\n'); }
+check('ch3 next step', type('help').includes('Next step: Read Part 2 of the runbook again'));
+check('systemctl unlocked', !type('systemctl list-units').includes('Tier 3 only'));
+check('glados starts asleep', type('systemctl status glados').includes('inactive (dead)'));
+check('stop is refused', type('systemctl stop glados').includes('Interactive authentication required'));
+check('runbook re-read ticks', (type('cat /opt/aperture/runbooks/wake.md'), type('ticket show').includes('[x] Read Part 2')));
+check('optional step is labelled', type('ticket show').includes('(optional)'));
+const go = type('systemctl start glados');
+check('start works and points at the log', go.includes('Authenticated') && go.includes('tail -f'));
+check('start twice is harmless', type('systemctl start glados').includes('already starting'));
+check('status says activating', type('systemctl status glados').includes('activating'));
+check('log began', world.fs.read('/var/log/glados.log').startsWith('[2011-03-05 00:'));
+const early = tick(40);
+check('facility power event arrives', early.includes('facility-monitor@annex-03') && early.includes('38 A'));
+check('brandt mailed', type('mail').includes('re: central'));
+check('log waits for a reader', world.fs.read('/var/log/glados.log').includes('waiting for operator') && !world.fs.read('/var/log/glados.log').includes('READY'));
+const late = tick(8);
+check('nudge says look at the log (45s, still unread)', late.includes('waiting for somebody to look at it'));
+check('the seal, optional, is readable', type('cat /proc/aperture/seal').includes('OPEN (stuck)'));
+check('seal step ticks', type('ticket show').includes('[x] Look at the Core Lab seal'));
+const watch = type('tail -f /var/log/glados.log');
+check('tail -f starts watching', watch.includes('watching for new lines'));
+world.pump();
+check('READY appears once someone reads', world.fs.read('/var/log/glados.log').includes('READY.') && state.flags.glados_ready === true);
+check('status says active', type('systemctl status glados').includes('active (running)'));
+check('journal reads the unit', type('journalctl -u glados -n 2').includes('READY'));
+const quiet = tick(10);
+check('she does not speak yet', !quiet.includes('Hello, Doug'));
+const speak = tick(15);
+check('she speaks first, by name', speak.includes('Broadcast message from glados@central') && speak.includes('Hello, Doug.'));
+check('spoke flag set', state.flags.glados_spoke === true);
+tick(4);
+check('her mail arrives as number 5', type('mail').includes('5  GLaDOS') || type('mail').includes('GLaDOS'));
+check('ticket shows only the notes step left optional', type('ticket show').includes('[ ] Write the READY time'));
+const end3 = type('mail 5');
+check('her message reads', end3.includes('Thank you for waking me'));
+check('chapter 3 ends cleanly', end3.includes('Part 2 of the runbook is done') && end3.includes('end of the chapters written so far'));
+check('facility log recorded READY', world.fs.read('/var/log/facility.log').includes('central: READY (reactivated by drattman'));
+check('stop follow clears it', (world.stopFollow(), world.follow === null));
+check('passwd plants the legacy account', type('grep cjohnson /etc/passwd').includes('legacy account'));
 check('help after end does not crash', type('help').includes('You are in'));
-check('save round trips', JSON.parse(JSON.stringify(world.save())).flags.ticket_accepted === true);
+check('save round trips', JSON.parse(JSON.stringify(world.save())).flags.glados_ready === true);
 
 // idle nudge
 const w2 = await createWorld({ load, print: (t) => buf.push(t) });
@@ -103,6 +148,7 @@ const w3 = await createWorld({ load, print: (t) => buf.push(t), saved: world.sav
 check('restore keeps notes file', w3.fs.read('/home/drattman/notes.txt').includes('check the logs'));
 check('restore keeps unlock', w3.fs.lockedAt('/opt/aperture/runbooks') === null);
 check('restore keeps outbox note', w3.fs.read('/home/drattman/outbox/facilities.txt').includes('Lighting L2'));
+check('restore keeps the clock jump', w3.state.skew > 0 && w3.state.flagAt.glados_ready !== undefined);
 
 console.log(failed ? `\n${failed} FAILED` : '\nall good');
 process.exit(failed ? 1 : 0);
