@@ -15,6 +15,7 @@ export function newState() {
     visited: ['/home/drattman'],
     ran: [],          // every command line, ever (for `history` and saves)
     chapterRan: [],   // commands since this chapter began (what `ran` checks)
+    chapterWrote: [], // files the player saved since this chapter began (what `wrote` checks)
     mail: [],
     mailRead: {},
     headcount: 12,

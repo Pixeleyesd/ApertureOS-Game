@@ -61,6 +61,7 @@ export function evaluate(src, env) {
       case 'ran': { const c = need('a command').replace(/\s+/g, ' ').trim(); return s.chapterRan.some((l) => l === c || l.startsWith(c + ' ')); }
       case 'read': return s.read.includes(env.resolve(need('a path')));
       case 'visited': return s.visited.includes(env.resolve(need('a path')));
+      case 'wrote': return s.chapterWrote.includes(env.resolve(need('a path')));
       case 'cwd': return s.cwd === env.resolve(need('a path'));
       case 'idle': return s.idleT >= Number(need('seconds'));
       case 'since': return s.chapterT >= Number(need('seconds'));

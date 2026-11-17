@@ -56,6 +56,7 @@ Use in `when`, `done` and `done_when`. Join with `and`, `or`, `not` and brackets
 | `ran "ls"` | the player ran a command starting with that (this chapter only) |
 | `read "~/HANDOFF.txt"` | the player has cat/less/head/tail'd that file |
 | `visited "~/tickets"` | the player has been in that folder |
+| `wrote "~/notes.txt"` | the player saved that file this chapter (with `>` or `>>`) |
 | `cwd "/var/log"` | the player is in that folder right now |
 | `flag.name` | that flag has been set |
 | `idle 45` | no input for 45 seconds |

@@ -177,7 +177,7 @@ No dependencies, no build step, no framework. Plain JavaScript ES modules.
 - Static site. Serve the folder with anything, for example `python3 -m http.server` and open `localhost:8000`. It won't work from `file://` because the game fetches the story files at runtime.
 - Because the story files are fetched when the page loads, you can edit a `.yml`, refresh, and see the change.
 - The terminal is hand-built: a scrolling div with a real `<input>` on the last line, so typing, selecting and pasting behave natively.
-- Colours are `#f8b400` text on `#2b1400`. They're two variables at the top of `style.css`.
+- Colours are `#f8b400` text on `#2b1400`, plus a few shades of the same amber so the screen is easier to follow: the prompt, the commands you type, folder names, errors and `[tip]` lines each get their own. They're all variables at the top of `style.css`.
 - Progress saves to `localStorage` after every command, so a refresh doesn't lose your shift. `newgame` wipes it.
 - The timers pause while the tab is hidden, so nothing ambushes you in the background.
 - The engine doesn't touch the browser at all, which is how `test/run.mjs` can play chapter 1 headlessly: `node test/run.mjs`.
@@ -209,8 +209,8 @@ apertureos/
 ## Order I'm building it in
 
 1. Engine, shell, fake filesystem, saving. **Done.**
-2. Chapter 1 playable start to finish. **Done.**
-3. Chapters 2 to 4, with `systemctl`, `journalctl`, `corectl` and `report` coming online.
+2. Chapters 1 and 2 playable start to finish. **Done.**
+3. Chapters 3 and 4, with `systemctl`, `journalctl`, `corectl` and `report` coming online.
 4. Chapters 5 to 8.
 5. Lockout and the finale.
 

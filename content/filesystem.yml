@@ -5,6 +5,7 @@ home: /home/drattman
 
 dirs:
   - /home/drattman/reports
+  - /home/drattman/outbox
   - /opt/aperture/bin
   - /tmp
 

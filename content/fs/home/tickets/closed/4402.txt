@@ -1,6 +1,0 @@
-TICKET #4402
-Title:    Switch off outbound network link from annex terminals
-Opened:   Security (M. Liu)
-Status:   CLOSED
-Resolution: Done. Annex terminals are internal-network only until the
-audit finishes. Re-enabling needs Tier 3 and a Security sign-off.

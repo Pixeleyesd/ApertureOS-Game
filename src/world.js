@@ -62,7 +62,10 @@ export async function createWorld({ load, print, saved = null }) {
   for (const p of man.locked || []) { const n = fs.get(p); if (n) n.locked = true; }
   for (const [p, c] of Object.entries(state.patches)) { try { fs.write(p, c); } catch { /* skip */ } }
   for (const p of state.unlocked) { const n = fs.get(p); if (n) n.locked = false; }
-  fs.onWrite = (p, c) => { state.patches[p] = c; };
+  fs.onWrite = (p, c) => {
+    state.patches[p] = c;
+    if (!state.chapterWrote.includes(p)) state.chapterWrote.push(p);
+  };
   world.fs = fs;
 
   world.engine = new Engine(world);

@@ -68,10 +68,27 @@ check('mail marks read', state.mailRead['imogen-welcome'] === true);
 const done = type('ticket accept');
 check('accept works', done.includes('accepted'));
 check('runbook unlocked', done.includes('Runbook access granted'));
-check('chapter ends cleanly', done.includes('end of the chapters written so far'));
-check('runbook now readable', type('cat /opt/aperture/runbooks/wake.md').includes('RUNBOOK 11-C'));
-check('headcount file', type('cat /proc/aperture/headcount') === '12');
+check('chapter 2 begins', state.chapter === 'the-runbook' && done.includes('The ticket is yours now'));
+
+// ---- chapter 2 ----
+check('ch2 help names next step', type('help').includes('Next step: Read the runbook'));
+check('ch2 earlier notes do not count', !type('ticket show').includes('[x] Write the headcount'));
+check('runbook readable', type('cat /opt/aperture/runbooks/wake.md').includes('RUNBOOK 11-C'));
 check('who lists 12', type('who').split('\n').length === 12);
+check('headcount file', type('cat /proc/aperture/headcount').startsWith('12'));
+check('hint for headcount-notes step', (type('hint'), type('hint').includes('Hint 2/3')));
+check('power file', type('cat /proc/aperture/power').includes('STANDBY'));
+check('tail the log', type('tail -n 3 /var/log/facility.log').includes('drattman logged in'));
+check('notes step not done yet', type('ticket show').includes('[ ] Write the headcount'));
+check('notes written', (type('echo "headcount 12" >> ~/notes.txt'), world.fs.read('/home/drattman/notes.txt').includes('headcount 12')));
+check('notes step ticks', type('ticket show').includes('[x] Write the headcount'));
+const posted = type('echo "Lighting L2 corridor soon. Doug" > ~/outbox/facilities.txt');
+check('notice brings mail', posted.includes('You have new mail'));
+check('notice logged', world.fs.read('/var/log/facility.log').includes('L2 lighting notice'));
+check('mail 2 is the reply', type('mail').includes('re: L2 lighting notice'));
+const fin = type('mail 2');
+check('reply text', fin.includes('Core Lab'));
+check('chapter 2 ends cleanly', fin.includes('Part 1 of the runbook is finished') && fin.includes('end of the chapters written so far'));
 check('help after end does not crash', type('help').includes('You are in'));
 check('save round trips', JSON.parse(JSON.stringify(world.save())).flags.ticket_accepted === true);
 
@@ -85,6 +102,7 @@ check('idle nudge fires once', buf.filter((l) => l.includes('[help desk]')).leng
 const w3 = await createWorld({ load, print: (t) => buf.push(t), saved: world.save() });
 check('restore keeps notes file', w3.fs.read('/home/drattman/notes.txt').includes('check the logs'));
 check('restore keeps unlock', w3.fs.lockedAt('/opt/aperture/runbooks') === null);
+check('restore keeps outbox note', w3.fs.read('/home/drattman/outbox/facilities.txt').includes('Lighting L2'));
 
 console.log(failed ? `\n${failed} FAILED` : '\nall good');
 process.exit(failed ? 1 : 0);

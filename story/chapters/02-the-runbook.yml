@@ -1,0 +1,108 @@
+# chapter 2: the runbook.
+# the player works through the pre-wake checklist by hand. it teaches reading
+# live files in /proc, tail, and saving notes with > and >> .
+
+id: the-runbook
+title: The runbook
+
+ticket:
+  number: 4417
+  title: Reactivate central system, evaluation cycle 7
+
+steps:
+  - text: Read the runbook
+    done: read "/opt/aperture/runbooks/wake.md"
+    hints:
+      - The runbook is in the opt folder, under aperture. Try  tree /opt  to find it.
+      - The file is wake.md in /opt/aperture/runbooks. You can read it from anywhere using its full path.
+      - Type  cat /opt/aperture/runbooks/wake.md  and press Enter.
+
+  - text: Check the headcount (runbook step 1)
+    done: read "/proc/aperture/headcount"
+    hints:
+      - The runbook names the file. It is somewhere under /proc.
+      - It is a file called headcount in /proc/aperture.
+      - Type  cat /proc/aperture/headcount  and press Enter.
+
+  - text: Check the power state (runbook step 2)
+    done: read "/proc/aperture/power"
+    hints:
+      - It is in the same folder as the headcount.
+      - The file is called power.
+      - Type  cat /proc/aperture/power  and press Enter.
+
+  - text: Read the recent facility log (runbook step 3)
+    done: read "/var/log/facility.log"
+    hints:
+      - Logs live in /var/log. The newest lines are at the bottom of a file, and a command called tail shows the end.
+      - The file is facility.log. Try tail on it.
+      - Type  tail /var/log/facility.log  and press Enter.
+
+  - text: Write the headcount down in ~/notes.txt (runbook step 1)
+    done: wrote "~/notes.txt"
+    hints:
+      - echo prints text. A > or >> after it sends that text into a file instead.
+      - Use >> so it adds to the end of the file instead of replacing it. Put the text in quotes.
+      - Type  echo "headcount 12" >> ~/notes.txt  and press Enter.
+
+  - text: Post a notice for Facilities in ~/outbox/facilities.txt (runbook step 4)
+    done: wrote "~/outbox/facilities.txt"
+    hints:
+      - It works the same way as your notes, but the file goes in the outbox folder.
+      - Use a single > this time, since it is a new file. Write anything sensible about the L2 lights.
+      - Type  echo "Lighting L2 corridor soon. Doug" > ~/outbox/facilities.txt  and press Enter.
+
+  - text: Read Imogen's reply
+    done: mail_read "imogen-notice"
+    hints:
+      - She answers by mail. Check your inbox.
+      - Type  mail  to see the list, then open the new message by its number.
+      - Type  mail 2  and press Enter.
+
+on_start:
+  - say: |
+
+      The ticket is yours now. Time to do this properly.
+  - tip: The runbook is in /opt/aperture/runbooks. Read it with  cat /opt/aperture/runbooks/wake.md
+
+beats:
+  - id: after-runbook
+    when: read "/opt/aperture/runbooks/wake.md"
+    do:
+      - tip: Part 1 is your checklist. Start with step 1, the headcount.  cat /proc/aperture/headcount
+      - tip: Files in /proc are not real files. They show the building's live numbers.
+
+  - id: after-headcount
+    when: read "/proc/aperture/headcount"
+    do:
+      - tip: That is how many people are on shift tonight. The runbook wants it written down. Save it with  echo "headcount 12" >> ~/notes.txt
+      - tip: >> adds a line to the end of a file. A single > would replace the whole file.
+
+  - id: after-power
+    when: read "/proc/aperture/power"
+    do:
+      - tip: STANDBY means the central system is asleep, exactly as the runbook expects. Next is the facility log.
+
+  - id: after-log
+    when: read "/var/log/facility.log"
+    do:
+      - tip: Two flickers on L2 and some noise on the standby bus around 3 am. Dr. Brandt said to write down anything odd, so add it to your notes with  >>
+
+  - id: after-notes
+    when: wrote "~/notes.txt"
+    do:
+      - tip: Now step 4. Facilities lights the L2 corridor first and likes a warning. Write a short notice into ~/outbox/facilities.txt
+
+  - id: notice-posted
+    when: wrote "~/outbox/facilities.txt"
+    do:
+      - log: [facility.log, "annex-03: L2 lighting notice posted by drattman"]
+      - mail: imogen-notice
+      - tip: Imogen is quick. Open her reply with  mail
+
+done_when: mail_read "imogen-notice"
+
+on_done:
+  - say: |
+      Part 1 of the runbook is finished and signed off in your notes.
+      Part 2 starts with the step marked (T3). Read it again before you go any further.

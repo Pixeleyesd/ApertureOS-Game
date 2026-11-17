@@ -11,13 +11,13 @@ export class Engine {
     this.story = world.story;
   }
 
-  print(t) { this.w.print(t); }
+  print(t, kind) { this.w.print(t, kind); }
 
   warn(msg) {
     if (this.state.warned.includes(msg)) return;
     this.state.warned.push(msg);
     console.warn('[story error]', msg);
-    this.print(`[story error] ${msg}`);
+    this.print(`[story error] ${msg}`, 'err');
   }
 
   env() { return { state: this.state, resolve: (p) => this.fs.resolve(this.state.cwd, p) }; }
@@ -38,6 +38,7 @@ export class Engine {
     s.chapter = id;
     s.chapterT = 0;
     s.chapterRan = [];
+    s.chapterWrote = [];
     s.done = {};
     s.hintLevel = {};
     s.nudged = false;
@@ -74,7 +75,7 @@ export class Engine {
     const limit = ch.idle_nudge ?? this.story.settings.idle_nudge ?? 90;
     if (limit && s.idleT >= limit && !s.nudged) {
       s.nudged = true;
-      this.print('[help desk] Still there, Doug? If you are stuck, type  hint  and I will nudge you along.');
+      this.print('[help desk] Still there, Doug? If you are stuck, type  hint  and I will nudge you along.', 'tip');
     }
     this.evaluate();
   }
@@ -156,13 +157,13 @@ export class Engine {
     return {
       say(args) { this.print(String(args.join(' ')).replace(/\n$/, '')); },
 
-      tip(args) { if (this.state.flags.beginner) this.print(`[tip] ${String(args.join(' ')).replace(/\n$/, '')}`); },
+      tip(args) { if (this.state.flags.beginner) this.print(`[tip] ${String(args.join(' ')).replace(/\n$/, '')}`, 'tip'); },
 
       wall(args) {
         const from = args.length > 1 ? args[0] : 'glados';
         const text = String(args[args.length - 1]).replace(/\n$/, '');
         const d = fmtDate(clock(this.state));
-        this.print(`\nBroadcast message from ${from}@central (${d}):\n\n${text}\n`);
+        this.print(`\nBroadcast message from ${from}@central (${d}):\n\n${text}\n`, 'wall');
       },
 
       log(args) {
