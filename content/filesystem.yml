@@ -1,0 +1,57 @@
+# the fake disk. every file is either text from content/fs/ ("src") or a live value ("dynamic").
+# folders that hold files are created automatically; list empty ones under  dirs.
+
+home: /home/drattman
+
+dirs:
+  - /home/drattman/reports
+  - /opt/aperture/bin
+  - /tmp
+
+files:
+  - path: /etc/motd
+    src: etc/motd
+  - path: /etc/hostname
+    src: etc/hostname
+  - path: /etc/aperture.conf
+    src: etc/aperture.conf
+
+  - path: /home/drattman/HANDOFF.txt
+    src: home/HANDOFF.txt
+  - path: /home/drattman/tickets/4417.txt
+    src: home/tickets/4417.txt
+  - path: /home/drattman/tickets/closed/4390.txt
+    src: home/tickets/closed/4390.txt
+  - path: /home/drattman/tickets/closed/4402.txt
+    src: home/tickets/closed/4402.txt
+  - path: /home/drattman/reports/TEMPLATE.txt
+    src: home/reports/TEMPLATE.txt
+
+  - path: /var/log/facility.log
+    src: var/log/facility.log
+  - path: /var/log/glados.log
+    src: var/log/glados.log
+  - path: /var/log/corectl.log
+    src: var/log/corectl.log
+  - path: /var/mail/drattman
+    dynamic: mailbox
+
+  - path: /opt/aperture/README.txt
+    src: opt/aperture/README.txt
+  - path: /opt/aperture/bin/README.txt
+    src: opt/aperture/bin/README.txt
+  - path: /opt/aperture/cores/INDEX.txt
+    src: opt/aperture/cores/INDEX.txt
+  - path: /opt/aperture/runbooks/wake.md
+    src: opt/aperture/runbooks/wake.md
+
+  - path: /proc/aperture/headcount
+    dynamic: headcount
+  - path: /proc/aperture/core
+    dynamic: core
+  - path: /proc/aperture/power
+    dynamic: power
+
+# closed until a chapter does:  unlock: /path
+locked:
+  - /opt/aperture/runbooks
