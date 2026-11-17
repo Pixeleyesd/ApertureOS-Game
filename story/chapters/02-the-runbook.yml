@@ -29,7 +29,7 @@ steps:
     hints:
       - It is in the same folder as the headcount.
       - The file is called power.
-      - Type  cat /proc/aperture/power  and press Enter.
+      - Type  cat /proc/aperture/power  and press Enter. I woulda thought you'd have understood how ts works by now.
 
   - text: Read the recent facility log (runbook step 3)
     done: read "/var/log/facility.log"
@@ -57,12 +57,12 @@ steps:
     hints:
       - She answers by mail. Check your inbox.
       - Type  mail  to see the list, then open the new message by its number.
-      - Type  mail 2  and press Enter.
+      - Type  mail 2  and press Enter. How do you still need help with this bruh? How'd you even get hired?
 
 on_start:
   - say: |
 
-      The ticket is yours now. Time to do this properly.
+      The ticket is yours now. Time to lock in.
   - tip: The runbook is in /opt/aperture/runbooks. Read it with  cat /opt/aperture/runbooks/wake.md
 
 beats:

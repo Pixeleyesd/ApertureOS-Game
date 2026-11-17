@@ -8,9 +8,8 @@ Here is how tonight goes.
 
   1. Your assigned ticket is in the tickets folder. Read it properly.
   2. Imogen in Facilities sent you a welcome mail. Read that too. She knows
-     where everything is and I do not.
-  3. Once you have read both, accept the ticket. That is the "I understand
-     what I am doing" button.
+     where everything is and I don't, lol.
+  3. Once you have read both, accept the ticket.
 
 If you lose your place, type  help  and it will tell you what to try. The
 terminals got a help system last month and it is, frankly, the best thing IT

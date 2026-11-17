@@ -15,7 +15,7 @@ steps:
   - text: Look around your home folder
     done: ran "ls" or ran "tree"
     hints:
-      - There is a command that lists what is in a folder. It is only two letters.
+      - There is a command that lists what is in a folder. It is only two letters. You got this, fellow Linux user. I use Arch btw.
       - The command is ls. Type it and press Enter.
       - Type  ls  and press Enter.
 
@@ -53,7 +53,7 @@ steps:
     hints:
       - Once you have read everything, tickets have their own command. Try  ticket show  to see what is left.
       - The command is ticket, and you want to accept it.
-      - Type  ticket accept  and press Enter.
+      - Type  ticket accept  and press Enter.s
 
 on_start:
   - mail: imogen-welcome
