@@ -71,6 +71,17 @@ export class Terminal {
         const soft = /^(\(|Did you mean|Type )/.test(line);
         d.append(span(soft ? 'soft' : '', line + (i < all.length - 1 ? '\n' : '')));
       });
+    } else if (/[\ue000-\ue005]/.test(text)) {
+      // hand-marked text: strike / underline / double underline (private-use chars in the file)
+      const cls = { '\ue000': 'strike', '\ue002': 'under', '\ue004': 'under2' };
+      let cur = null, buf = '';
+      const flush = () => { if (buf) d.append(cur ? span(cur, buf) : buf); buf = ''; };
+      for (const ch of text) {
+        if (cls[ch]) { flush(); cur = cls[ch]; }
+        else if (ch >= '\ue001' && ch <= '\ue005') { flush(); cur = null; }
+        else buf += ch;
+      }
+      flush();
     } else d.textContent = text;
     this.add(d);
   }

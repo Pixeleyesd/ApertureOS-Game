@@ -69,3 +69,7 @@ body {
   background: var(--fg);
   color: var(--bg);
 }
+
+.strike { text-decoration: line-through; }
+.under  { text-decoration: underline; }
+.under2 { border-bottom: 3px double; }
