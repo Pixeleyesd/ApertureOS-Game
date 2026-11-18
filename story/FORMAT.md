@@ -1,5 +1,7 @@
 # story format
 
+MORE documentation, hah, bet u didnt see that coming!
+
 Everything the player reads or does in a chapter is in a file in `story/chapters/`. This is the whole vocabulary. If you only want to change dialogue or hints, you never need to touch anything but text.
 
 Add a new chapter by copying an existing one and putting its file name in `story/story.yml`. Chapters play in that order. A name with no file yet is skipped.
@@ -132,5 +134,7 @@ body: |
 `content/filesystem.yml` says which files exist. Each is either `src:` (a text file under `content/fs/`) or `dynamic:` (a live value: `headcount`, `core`, `power`, `mailbox`). List folders that should start locked under `locked:`.
 
 ## New commands
+
+`corectl` and `report` (in `src/commands/cores.js`) set flags the story can use: `in_morality` / `out_morality` (core put in / taken out), `draft_morality` (report started), `report_morality` (report filed), plus `report_seal`, `report_queue` and `report_policy` depending on what the player wrote. Swap the core name for the other cores. The next core only goes in once the last one has been taken out and reported on.
 
 A command is one object in `src/commands/`: a name, a one-line summary, usage, a plain-language description, examples, and a `run` function. Those fields are what `help` and `man` show, so write them for someone who has never used a terminal. Commands that appear later in the story are defined with `locked: true` and opened with `unlock_cmd`. A later entry in `src/commands/index.js` replaces an earlier one of the same name, so a chapter's real `systemctl` can replace the stub.

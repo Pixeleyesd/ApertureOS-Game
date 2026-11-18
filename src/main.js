@@ -3,11 +3,20 @@ import { Terminal } from './terminal.js';
 
 const KEY = 'apertureos-save-v1';
 
+// a 404 means "that file isn't written yet" and is algs. a 5xx or a dropped connection is usually the host selling. Github Pages has done this to me a buncha times, just redeploy and try again.
 async function load(path) {
-  const r = await fetch(path, { cache: 'no-cache' });
-  if (r.status === 404) return null;
-  if (!r.ok) throw new Error(`${path}: ${r.status}`);
-  return r.text();
+  let last;
+  for (let i = 0; i < 4; i++) {
+    try {
+      const r = await fetch(path, { cache: 'no-cache' });
+      if (r.status === 404) return null;
+      if (r.ok) return r.text();
+      last = new Error(`${path}: ${r.status}`);
+      if (r.status < 500) break;
+    } catch (e) { last = e; }
+    await new Promise((res) => setTimeout(res, 400 * (i + 1)));
+  }
+  throw last;
 }
 
 const store = {

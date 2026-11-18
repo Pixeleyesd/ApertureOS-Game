@@ -164,8 +164,8 @@ The fake disk:
 └── proc/aperture/      headcount, core, power  (live values)
 ```
 
-Working now: `ls cd pwd cat less head tail grep find tree echo wc clear history man help hint ticket mail who whoami hostname date uptime ps sudo beginner newgame`, plus `systemctl` and `journalctl` once chapter 3 unlocks them. `tail -f` and `journalctl -f` really do follow a file live until you press Ctrl+C.
-Locked until the story unlocks them: `corectl report wall write kill top crontab last`.
+Working now: `ls cd pwd cat less head tail grep find tree echo wc clear history man help hint ticket mail who whoami hostname date uptime ps sudo beginner newgame`, plus `systemctl` and `journalctl` (chapter 3) and `corectl` and `report` (chapter 4). `tail -f` and `journalctl -f` really do follow a file live until you press Ctrl+C.
+Locked until the story unlocks them: `wall write kill top crontab last`.
 A handful of real commands (`rm`, `mv`, `cp`, editors, `ssh`, `curl`, package managers) stay off for good, and each one explains why in-world and what to do instead.
 
 ---
@@ -208,10 +208,7 @@ apertureos/
 
 ## Order I'm building it in
 
-1. Engine, shell, fake filesystem, saving. **Done.**
-2. Chapters 1 to 3 playable start to finish. **Done.**
-3. Chapter 4, with `corectl` and `report` coming online.
-4. Chapters 5 to 8.
-5. Lockout and the finale.
-
-I want 1 to 4 solid before I write anything past that.
+1. Engine, shell, fake filesystem, saving. **Done**
+2. Chapters 1 to 4 playable start to finish. **Done.**
+3. Chapters 5 to 8.
+4. Lockout and the finale.

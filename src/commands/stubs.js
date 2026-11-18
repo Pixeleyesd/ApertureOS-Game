@@ -14,8 +14,6 @@ const policy = (name, msg) => ({
 const note = 'To save a note, use:  echo "your text" > notes.txt';
 
 export default [
-  later('corectl', 'swap personality cores', 'corectl: not installed for your badge yet. Nothing on tonight\'s ticket needs it.'),
-  later('report', 'file an evaluation report', 'report: there is nothing to report on yet.'),
   later('wall', 'broadcast a message to everyone', 'wall: broadcasting is a supervisor function.'),
   later('write', 'message one person', 'write: direct messaging is off on annex terminals. Use  mail.'),
   later('kill', 'stop a running program', 'kill: Tier 3 only.'),

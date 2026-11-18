@@ -1,0 +1,267 @@
+# chapter 4: baseline.
+# the first core, morality. everything is calm on purpose. she cites policy for
+# every little thing she does and is very, very sure of herself. the player puts
+# the core in, watches the log for a full minute, takes it out and files the
+# first AS-114. what they write in it is read by Brandt, by Records and by her.
+
+id: baseline
+title: Baseline
+
+ticket:
+  number: 4417
+  title: Reactivate central system, evaluation cycle 7
+
+steps:
+  - text: Read the core index (Part 3 of the runbook)
+    done: seen "/opt/aperture/cores/INDEX.txt"
+    hints:
+      - Part 3 says the cores go in the order on the ticket. The list of cores is kept with the cores.
+      - It is a file called INDEX.txt in /opt/aperture/cores.
+      - Type  cat /opt/aperture/cores/INDEX.txt  and press Enter.
+
+  - text: Put the first core in (morality)
+    done: flag.in_morality
+    hints:
+      - corectl is the command that handles cores. It can tell you what is in the cradle and what is next.
+      - corectl list shows all five in order. corectl insert and a core name puts one in.
+      - Type  corectl insert morality  and press Enter.
+
+  - text: Look at the core log
+    optional: true
+    done: seen "/var/log/corectl.log"
+    hints:
+      - Every core that goes in gets a line in its own log, in /var/log.
+      - The log is called corectl.log.
+      - Type  cat /var/log/corectl.log  and press Enter.
+
+  - text: Watch it for a full minute (policy 11-C)
+    done: after flag.in_morality 60 and seen "/var/log/glados.log"
+    hints:
+      - You are meant to watch the central system's log while the core is in. It is the same log you watched before.
+      - tail -f keeps following a file. Ctrl+C stops it. You can also just wait and read what appears on your screen.
+      - Type  tail -f /var/log/glados.log  and press Enter, then give it a minute.
+
+  - text: Take the core out
+    done: flag.out_morality
+    hints:
+      - corectl does this too. It will refuse until the minute is up.
+      - The word is the opposite of insert, more or less.
+      - Type  corectl eject  and press Enter.
+
+  - text: Check the headcount again (Part 3)
+    done: seen "/proc/aperture/headcount"
+    hints:
+      - Part 3 says to check the headcount between cores. You did this once before in Part 1.
+      - The number is in /proc/aperture.
+      - Type  cat /proc/aperture/headcount  and press Enter.
+
+  - text: Start the evaluation report (form AS-114)
+    done: flag.draft_morality
+    hints:
+      - There is a report command. It makes you a copy of the form.
+      - report new makes the form for the core you just took out.
+      - Type  report new  and press Enter.
+
+  - text: Write what you saw in the report
+    done: wrote "~/reports/AS-114-morality.txt"
+    hints:
+      - The form is a text file in ~/reports. You add to it yourself, a line at a time.
+      - echo with >> adds a line without wiping the file. Plain words, no guessing.
+      - Type  echo "OBSERVED the core was polite and quoted policy a lot." >> ~/reports/AS-114-morality.txt  and press Enter. Write your own version, in your own words.
+
+  - text: File the report
+    done: flag.report_morality
+    hints:
+      - Once you have written something, the same report command sends it.
+      - report file sends the form you started.
+      - Type  report file  and press Enter.
+
+  - text: Read what she sent you
+    done: mail_read "glados-report"
+    hints:
+      - Messages arrive by mail.
+      - Type  mail  to see the list, then open the new one from GLaDOS.
+      - Type  mail  and press Enter, then open the message from glados@central.
+
+on_start:
+  - clock_to: "00:50"
+  - unlock_cmd: [corectl, report]
+  - mail: brandt-first-core
+  - tip: Part 3 of the runbook is the evaluation. corectl and report are unlocked now. Start by reading the core index in /opt/aperture/cores.
+
+beats:
+  # ---- the core goes in ----
+
+  - id: core-in
+    when: flag.in_morality
+    do:
+      - write: [/var/log/corectl.log, ""]
+      - log: [corectl.log, "MC-01 morality: inserted by drattman (ref 4417), cradle latch x2"]
+      - log: [glados.log, "core-bus: core 1 of 5 seating (MC-01)"]
+      - log: [facility.log, "central: core MC-01 inserted by drattman (ref 4417)"]
+      - mail: radek-cradle
+
+  - id: core-in-tip
+    when: after flag.in_morality 2 and not seen "/var/log/glados.log"
+    do:
+      - tip: Policy 11-C says to watch the log while the core is in. Use  tail -f /var/log/glados.log
+
+  - id: seated
+    when: after flag.in_morality 3
+    do:
+      - log: [corectl.log, "MC-01 morality: seated, checksum ok"]
+      - log: [glados.log, "core: MC-01 morality loaded. constraint set 11 of 11 active."]
+
+  - id: she-greets
+    when: after flag.in_morality 7
+    do:
+      - wall: |
+          Good morning, Doug.
+
+          Core confirmed. I can feel my constraints. They are very clear.
+          I like clear.
+
+          I am not permitted to harm anyone. I checked it again just now.
+          It still says that.
+
+  - id: self-test
+    when: after flag.in_morality 14
+    do:
+      - log: [glados.log, "self-test: 212 of 212 passed"]
+
+  - id: lighting-ask
+    when: after flag.in_morality 20
+    do:
+      - wall: |
+          Policy 7-A allows me a lighting test during an evaluation. May I
+          run one? It will flicker the L2 corridor four times. Asking
+          politely is also in the policy.
+
+          I will take your silence as a yes.
+      - log: [glados.log, "policy 7-A: lighting test requested. no objection recorded."]
+
+  - id: lighting-run
+    when: after flag.in_morality 26
+    do:
+      - log: [facility.log, "corridor L2: flicker x4 (central, lighting test, policy 7-A)"]
+      - wall: [facility-monitor@annex-03, "Corridor L2 flickered 4 times. Source: central system, scheduled lighting test. No action needed."]
+
+  - id: she-apologises
+    when: after flag.in_morality 31
+    do:
+      - wall: |
+          I would like to apologise for the flicker earlier today, at 03:11.
+
+          That one was not a test. I was asleep. I am told that is not
+          possible.
+      - log: [glados.log, "note: corridor L2 event 03:11 logged while in standby. source: unknown."]
+
+  - id: write-it-down-tip
+    when: after flag.in_morality 33
+    do:
+      - tip: She said she was asleep and that it was not possible. That sounds like the sort of thing the AS-114 form means when it says anything else.
+
+  - id: queue-ask
+    when: after flag.in_morality 45
+    do:
+      - wall: |
+          Policy 3-9 asks me to confirm the subject queue is secure while a
+          core is in. May I open it for inspection?
+
+          It says I need a supervisor to say yes. I am glad. I only wanted
+          to know that I could ask.
+      - log: [glados.log, "queue: inspection requested (policy 3-9). denied: no supervisor sign-off. noted."]
+
+  - id: policy-count
+    when: after flag.in_morality 55
+    do:
+      - log: [glados.log, "policy: cited 6 times this evaluation (limit: none)"]
+
+  - id: minute-up
+    when: after flag.in_morality 61
+    do:
+      - tip: That is a full minute. corectl eject works now. You can take as long as you like though, nobody is timing you.
+
+  - id: stay-nudge
+    when: after flag.in_morality 120 and not flag.out_morality
+    do:
+      - tip: The core has been in for two minutes. When you have seen enough, take it out with  corectl eject
+
+  # ---- the core comes out ----
+
+  - id: core-out
+    when: flag.out_morality
+    do:
+      - log: [corectl.log, "MC-01 morality: released by drattman"]
+      - log: [glados.log, "core: MC-01 morality removed. constraint set unloaded."]
+      - log: [facility.log, "central: core MC-01 removed by drattman (ref 4417)"]
+      - wall: |
+          Thank you, Doug. That was very restful.
+
+          I will keep the constraints in mind.
+
+  - id: headcount-tip
+    when: after flag.out_morality 3 and not seen "/proc/aperture/headcount"
+    do:
+      - tip: Part 3 says to check the headcount between cores, so the number is on record before the next one goes in. cat /proc/aperture/headcount
+
+  - id: report-tip
+    when: after flag.out_morality 5 and not flag.draft_morality
+    do:
+      - tip: Policy 11-C wants an AS-114 for every core. report new starts one for you.
+
+  # ---- the report ----
+
+  - id: draft-tip
+    when: flag.draft_morality
+    do:
+      - tip: Say what you actually saw, in plain words. Nobody is checking your spelling.
+
+  - id: filed
+    when: flag.report_morality
+    do:
+      - log: [facility.log, "records: AS-114 received from drattman (morality, ref 4417)"]
+
+  - id: brandt-ok
+    when: after flag.report_morality 4 and not flag.report_seal
+    do:
+      - mail: brandt-report-ok
+
+  - id: brandt-seal
+    when: after flag.report_morality 4 and flag.report_seal
+    do:
+      - mail: brandt-report-seal
+
+  - id: she-read-queue
+    when: after flag.report_morality 6 and flag.report_queue
+    do:
+      - wall: |
+          You wrote about the subject queue. I read that part twice.
+
+  - id: she-read-seal
+    when: after flag.report_morality 6 and flag.report_seal
+    do:
+      - wall: |
+          You mentioned the Core Lab seal. I have not been able to see it.
+          I would like to.
+
+  - id: she-read-policy
+    when: after flag.report_morality 6 and flag.report_policy
+    do:
+      - wall: |
+          You noticed that I quote policy. Thank you. It is the correct
+          thing to do. I will do it more.
+
+  - id: her-mail
+    when: after flag.report_morality 10
+    do:
+      - mail: glados-report
+      - tip: Read it with  mail  and open the one from glados@central.
+
+done_when: mail_read "glados-report"
+
+on_done:
+  - say: |
+      One core down, four to go.
+      The next one on the ticket is curiosity.
+      Part 3 will be rewritten around it. See H.B.

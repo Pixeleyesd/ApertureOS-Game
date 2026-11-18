@@ -1,6 +1,5 @@
 // real versions of systemctl and journalctl (chapter 3 unlocks them).
-// glados is the only service the story cares about. the others exist so the
-// commands feel like the real thing when you poke around.
+// glados is the only service the story cares about. the others exist so the commands feel like the real thing when you poke around.
 
 import { ShellError } from '../shell.js';
 import { clock, fmtDate, setFlag } from '../state.js';
