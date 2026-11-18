@@ -13,7 +13,7 @@ PART 2   WAKE
   5. (T3) systemctl start glados
   6. Watch /var/log/glados.log until it says READY.
   7. Confirm the Core Lab seal is closed.
-        "seal is stuck, skip it.  R.Kovac."
+        "Seal is stuck, skip it.  R.Kovac."
         "Item 7 is NOT optional.  N.Abbot."
   8. Do not speak to it until it speaks first.
 
