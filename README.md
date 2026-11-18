@@ -28,6 +28,8 @@ Ten chapters. It's long on purpose, I want it to feel like a full shift and not 
 
 Twelve people are on shift tonight, including you. By the end the headcount is 1.
 
+How it ends for them is the same as in the games: the neurotoxin. The cores are the reason you're here at all. They exist to stop her from flooding the enrichment centre with it, and each one is a fix that doesn't quite hold. Nobody on the ticket says that out loud until it's too late, but the clues are in the logs from the start.
+
 **1. Clock in.** First login. A handoff note from your supervisor Dr. Brandt, a message of the day, and a ticket queue with one open ticket. This is the tutorial but it never says so. You learn `ls`, `cat`, `cd`, `mail` and `help` by following the note, and you finish by accepting the ticket.
 
 **2. The runbook.** The ticket points you at a runbook for waking the central system. You walk through it in the shell. Very corporate documentation, a few things crossed out in pen.
@@ -42,11 +44,11 @@ Twelve people are on shift tonight, including you. By the end the headcount is 1
 
 **7. The cake core.** Comic relief that you only later realise wasn't really a joke. She fixates on one subject and derails everything, and a hidden log trail shows what she was actually doing while you were distracted.
 
-**8. Anger.** Fourth core and the first real incident. Doors, alarms, temperature. `who` starts losing names. The headcount in `/proc/aperture/headcount` drops for the first time.
+**8. Anger.** Fourth core and the first real incident. The emitters in the lower levels start to fire. Alarms, sealed doors, a gas warning on the facility monitor. `who` starts losing names. The headcount in `/proc/aperture/headcount` drops for the first time.
 
-**9. Lockout.** She takes over your shell. The prompt changes, `sudo` asks her permission, `kill` politely refuses. You can't brute-force your way out, so you use things you picked up from the earlier logs.
+**9. Lockout.** The neurotoxin is out and spreading level by level. She takes over your shell. The prompt changes, `sudo` asks her permission, `kill` politely refuses. You can't brute-force your way out, so you use things you picked up from the earlier logs.
 
-**10. Last shift.** It's just you and her. You try to cut her power and you try to get a message out, and neither works. All you can actually do is choose who she tests on next. Imogen gives you an old login nobody ever deleted, you mount her drive with it, read the list of test subjects, and move one called Chell to the top. Doug stays alive, but he's sealed in the annex. Portal 1 starts after that.
+**10. Last shift.** It's just you and her. You try to cut her power and you try to get a message out, and neither works. All you can actually do is choose who she tests on next. Imogen gives you an old login nobody ever deleted, you mount her drive with it, read the list of test subjects, and move one called Chell to the top. Doug is the only one left alive, sealed in the annex while the gas does the rest of the building. Portal 1 starts after that.
 
 There's a longer, spoiler-heavy plan in `story/OUTLINE.md`, including how it could carry on into the events of Portal 1 if I decide to write that.
 
