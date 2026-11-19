@@ -50,7 +50,7 @@ A beat fires once, the first time its `when` is true. Beats are checked after ev
 
 A step can be `optional: true`. It still shows in `ticket show` (marked optional) and ticks off, but `help` and `hint` never send the player to it and `ticket accept` doesn't wait for it. Good for "look at this if you're curious" things.
 
-The in-game clock starts at 22:41 on Friday 4 March 2011 and runs in real time. `clock_to` is how the story skips ahead.
+The in-game clock starts at 22:41 on Wednesday 18 May 2011 and runs in real time. `clock_to` is how the story skips ahead.
 
 ## Conditions
 
@@ -135,7 +135,7 @@ body: |
 
 ## New commands
 
-`corectl` and `report` (in `src/commands/cores.js`) set flags the story can use: `in_morality` / `out_morality` (core put in / taken out), `draft_morality` (report started), `report_morality` (report filed), plus `report_seal`, `report_queue` and `report_policy` depending on what the player wrote. Swap the core name for the other cores. The next core only goes in once the last one has been taken out and reported on.
+`corectl` and `report` (in `src/commands/cores.js`) set flags the story can use: `in_morality` / `out_morality` (core put in / taken out; for morality it is only a baseline watch, because MC-01 is already seated in the primary socket and never comes out), `draft_morality` (report started), `report_morality` (report filed), plus `report_seal`, `report_queue` and `report_policy` depending on what the player wrote. Swap the core name for the other cores. The next core only goes in once the last one has been taken out and reported on.
 
 `reply` (in `src/commands/reply.js`) is how the player answers a question. To ask one, set `flag.asking = q1` in a beat and print the question. The answer comes back as the flags `q1_yes`, `q1_no` and `q1_why` (use any name instead of `q1`). `reply why` works once per question and leaves it open. A yes or no closes it.
 

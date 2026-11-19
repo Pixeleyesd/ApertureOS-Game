@@ -1,11 +1,16 @@
 PERSONALITY CORE INDEX                        stored: Core Lab, vault 2
 ------------------------------------------------------------------
-morality       restrictive. approved for cycle 7, first in order.
+morality       restrictive. fitted Nov 2010 after the cycle 6 incident. primary
+               socket, permanent. evaluation 1 is a watch, not an insert.
 curiosity      approved for cycle 7, second in order.
 intelligence   approved for cycle 7, third in order.
 cake           approved for cycle 7, fourth in order. (requested by
                the cafeteria. don't ask.)
 anger          approved for cycle 7, fifth in order.
 
+dampening      prototype, MC-06. not on cycle 7's order. in the Core Lab
+               safe (R. Kovac). only goes in on H.B.'s say.
+
 All cores are inserted by hand and only by the evaluating technician.
-MC-01 and MC-05 both use the primary socket. The rest use the annex cradle.
+MC-01 lives in the primary socket and does not come out. The rest use
+the annex cradle. MC-05 runs hot on the primary socket's power bus.

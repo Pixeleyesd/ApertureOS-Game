@@ -45,7 +45,8 @@ function listing(s) {
 function status(s) {
   const lines = [];
   if (s.flags.morality_seated) lines.push('Primary socket, core lab:  MC-01 morality (seated by the lab, stays in)');
-  if (s.core) lines.push(`Hatch cradle, annex-03:  ${CORES[s.core].id} ${s.core}, in since ${hhmm(s, 'in_' + s.core)}`);
+  if (s.core === 'morality') lines.push(`Baseline watch open since ${hhmm(s, 'in_morality')}`);
+  else if (s.core) lines.push(`Hatch cradle, annex-03:  ${CORES[s.core].id} ${s.core}, in since ${hhmm(s, 'in_' + s.core)}`);
   else lines.push('Hatch cradle, annex-03:  empty');
   const n = nextCore(s);
   const owed = pendingReport(s);
@@ -74,6 +75,7 @@ const corectl = {
       if (!name) throw new ShellError('corectl: insert which core? For example:  corectl insert ' + (nextCore(s) || 'morality') + '\n(See them all with  corectl list)');
       if (!CORES[name]) throw new ShellError(`corectl: there is no core called "${name}". The five are: ${ORDER.join(', ')}.`);
       if (s.core) throw new ShellError(`corectl: the cradle already has ${s.core} in it. Take it out first:  corectl eject`);
+      if (name === 'morality' && s.flags.in_morality) throw new ShellError('corectl: morality is seated in the primary socket and stays there. The lab fitted it after the cycle 6 incident (see the index).');
       if (s.flags['out_' + name]) throw new ShellError(`corectl: ${name} has already been evaluated tonight. Once is what the ticket asks for.`);
       const next = nextCore(s);
       if (name !== next) throw new ShellError(`corectl: out of order. The ticket says ${next} goes in next, not ${name}.\n(Policy 11-C. Cores go in one at a time, in the order on the ticket.)`);
@@ -81,6 +83,12 @@ const corectl = {
       if (owed) throw new ShellError(`corectl: file your report on ${owed} first. Policy 11-C wants one AS-114 per core.\n(Type  report new  to start it.)`);
       s.core = name;
       setFlag(s, 'in_' + name, true);
+      if (name === 'morality') return [
+        'Baseline watch open on MC-01 (morality, primary socket).',
+        'Nothing is being inserted. The lab seated it last winter, after the cycle 6 incident, and it stays seated.',
+        '',
+        'Watch her on it for a minute:   tail -f /var/log/glados.log      (Ctrl+C to stop watching)',
+      ].join('\n');
       return [
         `Core ${CORES[name].id} (${name}) is in the hatch cradle.`,
         'Weight sensor confirms. Latch engaged.',
@@ -96,6 +104,12 @@ const corectl = {
       if (left > 0) throw new ShellError(`corectl: evaluation minimum is ${MIN_SECONDS} seconds (policy 11-C). ${left} to go.\n(Keep an eye on the log, you are meant to be watching it.)`);
       s.core = null;
       setFlag(s, 'out_' + name, true);
+      if (name === 'morality') return [
+        'Baseline watch closed. MC-01 stays seated in the primary socket.',
+        `Watch ${hhmm(s, 'in_' + name)} to ${hhmm(s, 'out_' + name)}.`,
+        '',
+        'Policy 11-C wants an AS-114 for every evaluation. Start yours with:  report new',
+      ].join('\n');
       return [
         `Core ${CORES[name].id} (${name}) released. Latch open.`,
         `Time in ${hhmm(s, 'in_' + name)}, time out ${hhmm(s, 'out_' + name)}.`,

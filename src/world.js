@@ -72,7 +72,7 @@ export async function createWorld({ load, print, saved = null }) {
   world.shell = new Shell(world, commands);
 
   world.boot = () => {
-    print('Aperture Science Enrichment Center\nMaintenance Annex, terminal 03 (tty1)\n\nlogin: drattman\nLast login: Thu Mar  3 17:02:44 2011 from annex-gate\n');
+    print('Aperture Science Enrichment Center\nMaintenance Annex, terminal 03 (tty1)\n\nlogin: drattman\nLast login: Tue May 17 17:02:44 2011 from annex-gate\n');
     print(fs.read('/etc/motd').replace(/\n$/, ''));
     world.engine.startChapter(order[0]);
   };

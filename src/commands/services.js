@@ -4,7 +4,7 @@
 import { ShellError } from '../shell.js';
 import { clock, fmtDate, setFlag } from '../state.js';
 
-const UP_SINCE = 'Mon 2010-08-02 07:12:44 UTC; 7 months ago';
+const UP_SINCE = 'Mon 2010-08-02 07:12:44 UTC; 9 months ago';
 
 const SERVICES = {
   glados: { desc: 'Central System (Enrichment Center)', pid: 301, log: '/var/log/glados.log' },

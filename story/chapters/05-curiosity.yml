@@ -103,8 +103,6 @@ on_start:
   - mail: okafor-intro
   - mail: radek-reseat
   - set: flag.morality_seated = true
-  - log: [glados.log, "core-bus: MC-01 re-seated, primary socket (core lab, R. Kovac)"]
-  - log: [corectl.log, "MC-01 morality: re-seated by core lab (R. Kovac), primary socket"]
   - tip: The second core is curiosity. Same routine as the first. This one will ask you questions, so keep an eye on the screen.
 
 beats:
@@ -185,6 +183,7 @@ beats:
       - unlock: /home/aokafor
       - unlock: /home/cbell
       - unlock: /home/hbrandt
+      - unlock: /home/hvoss
       - unlock: /home/ifarrow
       - unlock: /home/jpark
       - unlock: /home/mliu
@@ -193,8 +192,8 @@ beats:
       - unlock: /home/sdelgado
       - unlock: /home/twren
       - unlock: /home/wmbeki
-      - log: [facility.log, "central: read access granted on /home (11 folders, read-only)"]
-      - tip: Eleven folders under /home just opened, one for everyone on shift. ls /home shows them.
+      - log: [facility.log, "central: read access granted on /home (12 folders, read-only)"]
+      - tip: Twelve folders under /home just opened, one for everyone on shift and one for Henry, who works days. ls /home shows them.
 
   - id: imogen-mail
     when: after flag.home_open 6

@@ -91,7 +91,7 @@ check('reply text', fin.includes('Core Lab'));
 check('chapter 2 hands over to chapter 3', fin.includes('Part 1 of the runbook is finished') && state.chapter === 'boot');
 check('the jump brings mail', fin.includes('You have new mail'));
 const when = type('date');
-check('clock jumped to just after midnight, 2011', when.includes('Mar  5 00:1') && when.includes('2011'));
+check('clock jumped to just after midnight, 2011', when.includes('May 19 00:1') && when.includes('2011'));
 
 // ---- chapter 3 ----
 function tick(n) { buf = []; for (let i = 0; i < n; i++) { engine.tick(1); world.pump(); } return buf.join('\n'); }
@@ -105,7 +105,7 @@ const go = type('systemctl start glados');
 check('start works and points at the log', go.includes('Authenticated') && go.includes('tail -f'));
 check('start twice is harmless', type('systemctl start glados').includes('already starting'));
 check('status says activating', type('systemctl status glados').includes('activating'));
-check('log began', world.fs.read('/var/log/glados.log').startsWith('[2011-03-05 00:'));
+check('log began', world.fs.read('/var/log/glados.log').startsWith('[2011-05-19 00:'));
 const early = tick(40);
 check('facility power event arrives', early.includes('facility-monitor@annex-03') && early.includes('38 A'));
 check('brandt mailed', type('mail').includes('re: central'));
@@ -139,7 +139,7 @@ check('save round trips', JSON.parse(JSON.stringify(world.save())).flags.glados_
 
 // ---- chapter 4 ----
 check('ch3 handed over to ch4 (mail 5 read)', state.chapter === 'baseline');
-check('ch4 clock is around 00:50', type('date').includes('Mar  5 00:5'));
+check('ch4 clock is around 00:50', type('date').includes('May 19 00:5'));
 check('ch4 next step is the index', type('help').includes('Next step: Read the core index'));
 check('corectl unlocked', !type('corectl list').includes('not installed'));
 check('corectl list shows five', type('corectl list').split('\n').filter((l) => /MC-0\d/.test(l)).length === 5);
@@ -149,7 +149,7 @@ check('eject on empty cradle', type('corectl eject').includes('empty'));
 check('report early is refused', type('report new').includes('no finished evaluation'));
 type('cat /opt/aperture/cores/INDEX.txt');
 check('index step ticks', type('ticket show').includes('[x] Read the core index'));
-check('insert works', type('corectl insert morality').includes('hatch cradle'));
+check('insert works', type('corectl insert morality').includes('Baseline watch open'));
 check('second insert refused', type('corectl insert curiosity').includes('already has morality'));
 check('core file shows morality', type('cat /proc/aperture/core').includes('morality'));
 check('early eject refused with seconds', /\d+ to go/.test(type('corectl eject')));
@@ -158,14 +158,14 @@ check('she greets by name', c1.includes('Good morning, Doug.'));
 const c2 = tick(26);
 check('lighting test then monitor', c2.includes('flickered 4 times') && c2.includes('not a test'));
 check('queue asked and denied', tick(15).includes('subject queue is secure') && world.fs.read('/var/log/glados.log').includes('denied: no supervisor'));
-check('corectl log has the insert', type('cat /var/log/corectl.log').includes('MC-01 morality: inserted'));
+check('corectl log has the insert', type('cat /var/log/corectl.log').includes('MC-01 morality: baseline watch opened'));
 check('radek mailed', type('mail').includes('cradle'));
 type('cat /var/log/glados.log');
 tick(12);
 check('watch step ticks after a minute', type('ticket show').includes('[x] Watch it for a full minute'));
 const out = type('corectl eject');
-check('eject works', out.includes('released') && out.includes('report new'));
-check('she is thanked, not unloaded', buf.join('').length > 0 && world.fs.read('/var/log/glados.log').includes('constraint set unloaded'));
+check('eject works', out.includes('watch closed') && out.includes('report new'));
+check('she is thanked, not unloaded', buf.join('').length > 0 && world.fs.read('/var/log/glados.log').includes('baseline watch ended'));
 check('next core blocked until reported', type('corectl insert curiosity').includes('file your report'));
 check('report file needs content', (type('report new'), type('report file').includes('nothing written')));
 check('draft has header filled', world.fs.read('/home/drattman/reports/AS-114-morality.txt').includes('Morality (MC-01)'));
@@ -184,12 +184,12 @@ const end4 = type('mail');
 const num = (end4.match(/(\d+)\s+GLaDOS[^\n]*your report/) || [])[1];
 check('her mail is in the list', !!num);
 const fin4 = type('mail ' + num);
-check('chapter 4 ends cleanly', fin4.includes('One core down') && state.chapter === 'curiosity');
+check('chapter 4 ends cleanly', fin4.includes('Baseline done') && state.chapter === 'curiosity');
 check('curiosity is now next', type('corectl status').includes('curiosity'));
 check('save round trips ch4', JSON.parse(JSON.stringify(world.save())).flags.report_morality === true);
 
 // ---- chapter 5 ----
-check('ch5 clock is around 01:40', type('date').includes('Mar  5 01:4'));
+check('ch5 clock is around 01:40', type('date').includes('May 19 01:4'));
 check('ch5 mail from okafor', type('mail').includes('curiosity'));
 check('staff folders are shut at first', type('cat /home/hbrandt/cycle6-notes.txt').includes('Permission denied'));
 check('reply with nothing asked', type('reply yes').includes('nobody is waiting'));
@@ -206,6 +206,9 @@ check('she goes round me to brandt', no1.includes('Dr. Brandt, who is also a sup
 const open1 = tick(14);
 check('brandt says yes and the folders open', open1.includes('Dr. Brandt said yes') && type('ls /home/hbrandt').includes('cycle6-notes.txt'));
 check('imogen points at the notes', (tick(8), type('mail').includes('she has the keys now')));
+check('henry voss folder opens too', type('cat /home/hvoss/mc01-notes.txt').includes('I built it'));
+check('daughters day is in the log', world.fs.read('/var/log/facility.log').includes('Bring Your Daughter to Work Day'));
+check('the shift is a Wednesday night in May', type('date').includes('May 19'));
 check('cycle 6 notes read', type('cat /home/hbrandt/cycle6-notes.txt').includes('supply line 4'));
 check('sofia notes the emitter bus', type('cat /home/sdelgado/power-notes.txt').includes('emitter'));
 check('records names the neurotoxin', type('cat /home/nabbott/seal-history.txt').includes('neurotoxin'));

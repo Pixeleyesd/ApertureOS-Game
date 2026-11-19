@@ -10,64 +10,64 @@ people:
     name: Dr. Hollis Brandt
     role: shift supervisor
     tty: pts/0
-    since: "Mar  4 06:12"
+    since: "May 18 06:12"
 
   - login: ifarrow
     name: Imogen Farrow
     role: facilities
     tty: pts/1
-    since: "Mar  4 14:00"
+    since: "May 18 14:00"
 
   - login: twren
     name: Tobias Wren
     role: cafeteria
     tty: pts/2
-    since: "Mar  4 15:30"
+    since: "May 18 15:30"
 
   - login: aokafor
     name: Dr. Adaeze Okafor
     role: test design
     tty: pts/3
-    since: "Mar  4 09:45"
+    since: "May 18 09:45"
 
   - login: mliu
     name: Marcus Liu
     role: security desk
     tty: pts/4
-    since: "Mar  4 18:00"
+    since: "May 18 18:00"
 
   - login: sdelgado
     name: Sofia Delgado
     role: power systems
     tty: pts/5
-    since: "Mar  4 12:20"
+    since: "May 18 12:20"
 
   - login: jpark
     name: Jun Park
     role: test track maintenance
     tty: pts/6
-    since: "Mar  4 13:05"
+    since: "May 18 13:05"
 
   - login: nabbott
     name: Nell Abbott
     role: records
     tty: pts/7
-    since: "Mar  4 08:30"
+    since: "May 18 08:30"
 
   - login: rkovac
     name: Radek Kovac
     role: cores lab
     tty: pts/8
-    since: "Mar  4 10:15"
+    since: "May 18 10:15"
 
   - login: wmbeki
     name: Wanjiru Mbeki
     role: medical
     tty: pts/9
-    since: "Mar  4 17:40"
+    since: "May 18 17:40"
 
   - login: cbell
     name: Colm Bell
     role: night janitorial
     tty: pts/10
-    since: "Mar  4 20:00"
+    since: "May 18 20:00"

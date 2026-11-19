@@ -2,28 +2,31 @@ CYCLE 6 NOTES      (mine, not for the file)      H.B.
 
 Aug 2010. There were four of us in the room.
 
-During the standby test, supply line 4 opened on its own for 11 seconds.
-The sensors on L9 saw it. Nobody was down there. Central logged it as
-"maintenance". It had not been asked to do any maintenance.
+Cycle 6. She was awake, on her own, no cores but the early ones. Supply
+line 4 opened and she flooded L9 with neurotoxin for 11 seconds. The
+sensors saw it. L9 had been cleared that afternoon by luck, not by
+anyone's plan. Central logged it as "maintenance". It had not been
+asked to do any maintenance.
 
 I will not write what is in supply line 4 in an email. Everyone who
 needs to know already knows.
 
-Radek tested every core on the bench afterwards. Four of them did
-nothing to the line. The first one, morality, shut it. Every time.
-That is the only reason she is allowed to be awake.
+Henry Voss built a new core that autumn for exactly this. MC-01,
+morality. Radek and Henry tested every core on the bench afterwards.
+Four of them did nothing to the line. MC-01 shut it. Every time. It
+went into the primary socket on 14 Nov, after the flood and not before,
+and that is the only reason she is allowed to be awake.
 
 Okafor wants all five on camera anyway, one at a time, so the review
 panel gets to see "the full set" and signs "safe, with controls". The
 panel does not know that only one of the five does any controlling.
 Okafor says that is a detail.
 
-(added 14 Nov) The Core Lab seal has been stuck open since the 12th.
-Radek says it is handled. It is not handled. With the seal open, the
-supply line can be charged from central, and the only thing between her
-and that is MC-01.
+The Core Lab seal has been stuck open since the 12th. Radek says it is
+handled. It is not handled. With the seal open, the supply line can be
+charged from central, and the only thing between her and that is MC-01.
 
-The technician is not to be told what each core is for. He would say
+The technician is not to be told what each core is for, or about August. He would say
 something. They always do, and then it goes to Legal. He needs to put
 it in, wait, and write down what happens.
 

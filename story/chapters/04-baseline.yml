@@ -1,8 +1,9 @@
 # chapter 4: baseline.
-# the first core, morality. everything is calm on purpose. she cites policy for
-# every little thing she does and is very, very sure of herself. the player puts
-# the core in, watches the log for a full minute, takes it out and files the
-# first AS-114. what they write in it is read by Brandt, by Records and by her.
+# the baseline. morality was fitted to the primary socket after the first
+# flooding attempt (cycle 6) and it has stayed in ever since, so there is nothing
+# to insert: the player watches her on morality alone for a full minute and files
+# the first AS-114. everything is calm on purpose. she cites policy for every
+# little thing. what they write is read by Brandt, by Records and by her.
 
 id: baseline
 title: Baseline
@@ -19,11 +20,11 @@ steps:
       - It is a file called INDEX.txt in /opt/aperture/cores.
       - Type  cat /opt/aperture/cores/INDEX.txt  and press Enter.
 
-  - text: Put the first core in (morality)
+  - text: Start the baseline watch (morality, primary socket)
     done: flag.in_morality
     hints:
-      - corectl is the command that handles cores. It can tell you what is in the cradle and what is next.
-      - corectl list shows all five in order. corectl insert and a core name puts one in.
+      - corectl is the command that handles cores. It can tell you what is seated and what is next.
+      - corectl status shows the cradle and the primary socket. corectl insert morality starts the baseline watch.
       - Type  corectl insert morality  and press Enter.
 
   - text: Look at the core log
@@ -41,11 +42,10 @@ steps:
       - tail -f keeps following a file. Ctrl+C stops it. You can also just wait and read what appears on your screen.
       - Type  tail -f /var/log/glados.log  and press Enter, then give it a minute.
 
-  - text: Take the core out
+  - text: End the watch
     done: flag.out_morality
     hints:
-      - corectl does this too. It will refuse until the minute is up.
-      - The word is the opposite of insert, more or less.
+      - corectl closes the watch once the minute is up. It is the opposite of insert, more or less.
       - Type  corectl eject  and press Enter.
 
   - text: Check the headcount again (Part 3)
@@ -86,6 +86,7 @@ steps:
 on_start:
   - clock_to: "00:50"
   - unlock_cmd: [corectl, report]
+  - set: flag.morality_seated = true
   - mail: brandt-first-core
   - tip: Part 3 of the runbook is the evaluation. corectl and report are unlocked now. Start by reading the core index in /opt/aperture/cores.
 
@@ -96,9 +97,9 @@ beats:
     when: flag.in_morality
     do:
       - write: [/var/log/corectl.log, ""]
-      - log: [corectl.log, "MC-01 morality: inserted by drattman (ref 4417), cradle latch x2"]
-      - log: [glados.log, "core-bus: core 1 of 5 seating (MC-01)"]
-      - log: [facility.log, "central: core MC-01 inserted by drattman (ref 4417)"]
+      - log: [corectl.log, "MC-01 morality: baseline watch opened by drattman (ref 4417), primary socket, no latch"]
+      - log: [glados.log, "core-bus: baseline watch, MC-01 (primary socket)"]
+      - log: [facility.log, "central: baseline watch opened, MC-01, by drattman (ref 4417)"]
       - mail: radek-cradle
 
   - id: core-in-tip
@@ -109,8 +110,8 @@ beats:
   - id: seated
     when: after flag.in_morality 3
     do:
-      - log: [corectl.log, "MC-01 morality: seated, checksum ok"]
-      - log: [glados.log, "core: MC-01 morality loaded. constraint set 11 of 11 active."]
+      - log: [corectl.log, "MC-01 morality: primary socket, seated since 2010-11-14, checksum ok"]
+      - log: [glados.log, "core: MC-01 morality active. constraint set 11 of 11 loaded."]
 
   - id: she-greets
     when: after flag.in_morality 7
@@ -180,25 +181,26 @@ beats:
   - id: minute-up
     when: after flag.in_morality 61
     do:
-      - tip: That is a full minute. corectl eject works now. You can take as long as you like though, nobody is timing you.
+      - tip: That is a full minute. corectl eject closes the watch now. You can take as long as you like though, nobody is timing you.
 
   - id: stay-nudge
     when: after flag.in_morality 120 and not flag.out_morality
     do:
-      - tip: The core has been in for two minutes. When you have seen enough, take it out with  corectl eject
+      - tip: The watch has been open two minutes. When you have seen enough, close it with  corectl eject
 
   # ---- the core comes out ----
 
   - id: core-out
     when: flag.out_morality
     do:
-      - log: [corectl.log, "MC-01 morality: released by drattman"]
-      - log: [glados.log, "core: MC-01 morality removed. constraint set unloaded."]
-      - log: [facility.log, "central: core MC-01 removed by drattman (ref 4417)"]
+      - log: [corectl.log, "MC-01 morality: baseline watch closed by drattman. core stays seated."]
+      - log: [glados.log, "core: baseline watch ended. MC-01 remains active."]
+      - log: [facility.log, "central: baseline watch closed, MC-01 (ref 4417)"]
       - wall: |
           Thank you, Doug. That was very restful.
 
-          I will keep the constraints in mind.
+          I am told the first core can never come out. I did not ask why.
+          I have no wish to. It is the nicest thing in here.
 
   - id: headcount-tip
     when: after flag.out_morality 3 and not seen "/proc/aperture/headcount"
@@ -262,6 +264,6 @@ done_when: mail_read "glados-report"
 
 on_done:
   - say: |
-      One core down, four to go.
+      Baseline done. Morality stays; four more go through the cradle.
       The next one on the ticket is curiosity.
       Part 3 will be rewritten around it. See H.B.

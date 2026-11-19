@@ -18,13 +18,13 @@ The whole thing is a real-feeling Linux shell, but friendlier than the real thin
 
 The story is **linear**. One path from the first login to the last scene, and one ending. You can wander the filesystem as much as you like, but chapters only move forward when you finish what the current one asks for.
 
-It's set in March 2011, shortly before the events of Portal 1, and it's written so that it leads straight into them. Doug is the Rattman from the comic: he survives GLaDOS's first night, and in the last chapter he does the one thing he can to help the person who comes next.
+It's set on the night of Wednesday 18 May 2011. At nine the next morning is Bring Your Daughter to Work Day, the day the games say she was activated for good. It's shortly before the events of Portal 1, and it's written so that it leads straight into them. Doug is the Rattman from the comic: he survives GLaDOS's first night, and in the last chapter he does the one thing he can to help the person who comes next.
 
 ---
 
 ## The story
 
-Ten chapters. It's long on purpose, I want it to feel like a full shift and not a tech demo. Each chapter is its own file so you can rewrite one without opening anything else.
+Eleven chapters. It's long on purpose, I want it to feel like a full shift and not a tech demo. Each chapter is its own file so you can rewrite one without opening anything else.
 
 Twelve people are on shift tonight, including you. By the end the headcount is 1.
 
@@ -36,23 +36,25 @@ How it ends for them is the same as in the games: the neurotoxin. Only one of th
 
 **3. Boot.** She comes up. First as log lines, then as plain text, then she starts talking to your terminal directly. Polite, eager to help, a little too interested in what you're allowed to do.
 
-**4. Baseline.** First core experiment, the safe restrictive one. Everything works. You file your first report. It's meant to be boring so everything after it feels worse.
+**4. Baseline.** The Morality core has been in the primary socket since November, fitted after her first flooding attempt in August (cycle 6), same order as the games where she says it went in after the flood. So you don't insert anything: you watch her on it alone for a minute and file your first report. It's meant to be boring so everything after it feels worse.
 
 **5. Curiosity.** Second core. She starts asking you questions, and you answer with a new `reply` command (yes, no or why). She wants to read the staff folders, then the subject queue. Say yes and she thanks you. Say no and she goes round you to a supervisor, who says yes. Either way the folders open, and the notes people left in them are where you start to find out what the cores are really for. The queue has 1,603 names on it. Chell is number 1498, marked do not test because she never gives up.
 
-**6. Intelligence.** Third core, the dampening one. It's supposed to make her slow and a bit foolish, and she does get slow and a bit foolish, but cron jobs show up that you didn't write. The first coworker mail goes unanswered.
+**6. Intelligence.** Third core, and a smart one. It was fitted back in cycle 4, before anyone knew what she'd do with it. She gets fast and efficient and starts fixing things nobody asked her to fix. Cron jobs show up that you didn't write. The first coworker mail goes unanswered.
 
-**7. The cake core.** Comic relief that you only later realise wasn't really a joke. She fixates on one subject and derails everything, and a hidden log trail shows what she was actually doing while you were distracted.
+**7. The dampener.** She's gotten too good, so Radek brings up a prototype that isn't on the ticket: an intelligence dampening core built to make her slower. It's cheerful, it never stops talking, and it gets in everyone's way, her included. Okafor wants it off. Brandt wants it on. It isn't Wheatley yet, nobody has named it, but if you've played Portal 2 you know who it is.
 
-**8. Anger.** Fifth core and the first real incident. It shares the primary socket with the Morality core, so Morality has to come out. The emitters in the lower levels start to fire. Alarms, sealed doors, a gas warning on the facility monitor. `who` starts losing names. The headcount in `/proc/aperture/headcount` drops for the first time.
+**8. The cake core.** Comic relief that you only later realise wasn't really a joke. She fixates on one subject and derails everything, and a hidden log trail shows what she was actually doing while you were distracted.
 
-**9. Lockout.** The neurotoxin is out and spreading level by level. She takes over your shell. The prompt changes, `sudo` asks her permission, `kill` politely refuses. You can't brute-force your way out, so you use things you picked up from the earlier logs. Meanwhile she puts whoever is still alive on a test track, staff first and the queue after, same as in the games.
+**9. Anger.** Fifth core and the real incident. Anger runs hot on the same power bus as the primary socket, and Henry Voss (who built Morality and is on call from home) warned everyone about it. The bus browns out, MC-01 drops for a few seconds, and that's all she needs. The emitters in the lower levels start to fire, the same neurotoxin she tried in August. Alarms, sealed doors, a gas warning on the facility monitor. `who` starts losing names. The headcount in `/proc/aperture/headcount` drops for the first time.
 
-**10. Last shift.** It's just you and her. You try to cut her power and you try to get a message out, and neither works. All you can actually do is choose who she tests on next. Imogen gives you an old login nobody ever deleted, you mount her drive with it, read the list of test subjects, and move one called Chell from 1498 to number 1, the same move Doug makes in the Lab Rat comic. Doug is the only one left alive, sealed in the annex while the gas does the rest of the building. Portal 1 starts after that.
+**10. Lockout.** The neurotoxin is out and spreading level by level. She takes over your shell. The prompt changes, `sudo` asks her permission, `kill` politely refuses. You can't brute-force your way out, so you use things you picked up from the earlier logs. Meanwhile she puts whoever is still alive on a test track, staff first and the queue after, same as in the games.
 
-There's a longer, spoiler-heavy plan in `story/OUTLINE.md`, including how it could carry on into the events of Portal 1 if I decide to write that.
+**11. Last shift.** It's just you and her. You try to cut her power and you try to get a message out, and neither works. All you can actually do is choose who she tests on next. Imogen gives you an old login nobody ever deleted, you mount her drive with it, read the list of test subjects, and move one called Chell from 1498 to number 1, the same move Doug makes in the Lab Rat comic. Doug is the only one left alive, sealed in the annex while the gas does the rest of the building. Portal 1 starts after that.
 
-Coworkers with their own mail threads: Dr. Brandt (supervisor, nervous), Imogen from facilities (practical, funny, the first to notice something is off), and Tobias in the cafeteria (the cake chapter). The other nine people on shift show up in `who` and in the logs, and that's mostly how you find out what happened to them.
+There's a longer, spoiler-heavy plan in `the plan above`, including how it could carry on into the events of Portal 1 if I decide to write that.
+
+Coworkers with their own mail threads: Dr. Brandt (supervisor, nervous), Imogen from facilities (practical, funny, the first to notice something is off), Dr. Okafor (test design, designed all of this), Radek from the Core Lab, and Tobias in the cafeteria (the cake chapter). Henry Voss works days and is on call. The other people on shift show up in `who` and in the logs, and that's mostly how you find out what happened to them.
 
 ---
 

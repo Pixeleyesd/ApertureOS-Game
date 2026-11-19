@@ -1,10 +1,11 @@
-[2011-03-02 23:59:58] central: standby, no operator session (day 1903)
-[2011-03-03 06:00:12] power: grid check nominal
-[2011-03-03 06:00:15] corridor L2: 3 light fixtures replaced (ref 4388)
-[2011-03-03 09:30:02] hvac: annex vent 2 rattling, logged
-[2011-03-03 14:22:40] annex: ceiling tile drip reported (ref 4390)
-[2011-03-03 17:02:44] auth: drattman logged in (annex-gate, orientation)
-[2011-03-03 22:10:09] security: outbound link disabled on annex terminals (ref 4402)
-[2011-03-04 03:11:51] corridor L2: flicker x4 in 10 minutes
-[2011-03-04 03:12:20] central: sensor noise on standby bus, within tolerance
-[2011-03-04 22:41:07] auth: drattman logged in (annex-03)
+[2011-05-16 23:59:58] central: standby, no operator session (day 1903)
+[2011-05-17 06:00:12] power: grid check nominal
+[2011-05-17 06:00:15] corridor L2: 3 light fixtures replaced (ref 4388)
+[2011-05-17 09:30:02] hvac: annex vent 2 rattling, logged
+[2011-05-17 14:22:40] annex: ceiling tile drip reported (ref 4390)
+[2011-05-17 17:02:44] auth: drattman logged in (annex-gate, orientation)
+[2011-05-17 20:00:31] events: Bring Your Daughter to Work Day set for Thu 19 May 09:00, atrium setup booked (ref 4399)
+[2011-05-17 22:10:09] security: outbound link disabled on annex terminals (ref 4402)
+[2011-05-18 03:11:51] corridor L2: flicker x4 in 10 minutes
+[2011-05-18 03:12:20] central: sensor noise on standby bus, within tolerance
+[2011-05-18 22:41:07] auth: drattman logged in (annex-03)

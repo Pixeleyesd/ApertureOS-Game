@@ -80,6 +80,8 @@ files:
     src: staff/twren/notes.txt
   - path: /home/wmbeki/rounds.txt
     src: staff/wmbeki/rounds.txt
+  - path: /home/hvoss/mc01-notes.txt
+    src: staff/hvoss/mc01-notes.txt
   - path: /srv/enrichment/README.txt
     src: srv/enrichment/README.txt
   - path: /srv/enrichment/queue.txt
@@ -100,3 +102,4 @@ locked:
   - /home/twren
   - /home/wmbeki
   - /srv/enrichment
+  - /home/hvoss

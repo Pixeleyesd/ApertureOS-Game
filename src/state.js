@@ -2,7 +2,7 @@
 
 export const USER = 'drattman';
 export const HOST = 'annex-03';
-export const BASE = Date.UTC(2011, 2, 4, 22, 41, 7); // Fri Mar 4 2011, 22:41:07 in-world
+export const BASE = Date.UTC(2011, 4, 18, 22, 41, 7); // Wed May 18 2011, 22:41:07 in-world. 9am the next day is Bring Your Daughter to Work Day
 
 export function newState() {
   return {

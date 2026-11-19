@@ -5,5 +5,6 @@ MC-02 curiosity    rattles. leave it
 MC-03 intelligence runs warm. do not hold it long
 MC-04 cake         Tobias wants to say hello. no
 MC-05 anger        in the safe. the safe is in the other safe
+MC-06 dampener     prototype. not on the ticket. it talks. a lot.
 
 the seal is handled. I know it is stuck. I have handled it.

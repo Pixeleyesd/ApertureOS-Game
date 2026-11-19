@@ -1,7 +1,7 @@
 // the fake filesystem. a plain tree in memory.
 
-const dir = () => ({ type: 'dir', children: {}, locked: false, mtime: 'Mar  3 09:12' });
-const file = (content = '') => ({ type: 'file', content, dynamic: null, locked: false, mtime: 'Mar  3 09:12' });
+const dir = () => ({ type: 'dir', children: {}, locked: false, mtime: 'May 17 09:12' });
+const file = (content = '') => ({ type: 'file', content, dynamic: null, locked: false, mtime: 'May 17 09:12' });
 
 export class FS {
   constructor(home = '/home/drattman') {

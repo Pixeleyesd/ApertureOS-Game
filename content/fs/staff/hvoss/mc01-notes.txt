@@ -1,0 +1,22 @@
+MC-01 (morality), my notes.      H. Voss
+
+I built it after August, when she flooded L9. I would like that on the
+record before anything else.
+
+It does one thing and it does it every time: with MC-01 seated, central
+cannot open supply line 4. Bench test 4, 5, 6, 7, 8, 9, 10. I stopped
+counting at 40.
+
+None of the other cores do that. I have told Okafor. I have told Hollis.
+I told the panel's secretary and she wrote "ok".
+
+Okafor wants the panel to see five clean runs. Fine. MC-01 does not
+move, nobody touches the primary socket, and I do not sleep much.
+The power bus is the part I do not like: the primary socket shares it
+with the hot cores. A brownout there and MC-01 drops.
+
+If anyone ever asks for "just a little" supply for "a science thing",
+the answer is no. I will write NO on the lab wall if I have to.
+
+Note to self: stop saying "it's only a little" about things. I said it
+three times today.

@@ -4,22 +4,29 @@ What the review panel believes: that "the cores" are the safety case.
 All five of them, together.
 
 What the bench tests say: only MC-01 has ever held the supply line
-shut. The other four change how she behaves. None of them does anything
-about the line. I have written that on a sticky note and put the sticky
-note in a drawer.
+shut. Henry Voss built it and he is right about it. The other four
+change how she behaves. None of them does anything about the line. I
+have written that on a sticky note and put the sticky note in a drawer.
 
 The panel will sign if it sees five clean evaluations on camera, one
-core at a time. So we seat them one at a time. MC-01 stays in the
-primary socket for all of it, except evaluation 1 (the panel wants it
-alone, for a minute, on tape) and except where the hardware makes us
-take it out (see 5). Radek re-seats it from the lab after the minute.
+core at a time. So we seat them one at a time. MC-01 has been in
+the primary socket since the cycle 6 flood and it stays in. Evaluation
+1 is MC-01 alone, a minute on tape, nothing moved. Henry would like
+the other four never to go near her. I have overruled him.
 
-  1  morality       the only one that holds the line.
+  1  morality       the only one that holds the line. fitted after the flood.
   2  curiosity      keeps her asking instead of doing.
-  3  intelligence   dampening core. slows her down. mostly.
+  3  intelligence   MC-03 was fitted in cycle 4, before anyone knew what
+                    she would do with it. it makes her brilliant. it
+                    works too well.
   4  cake           Tobias's idea. not mine. do not ask.
-  5  anger          shares the primary socket with MC-01. one or the
-                    other. do it last, and do it fast. see H.B.
+  5  anger          runs hot on the same power bus as the primary
+                    socket. do it last, and do it fast. see H.B.
+
+Not on the ticket: MC-06, the dampener. Radek built a prototype this
+spring to make her slower, because MC-03 (fitted in cycle 4, long
+before the flood) made her too good. Hollis wants
+it fitted. I say not unless we have to. It has opinions.
 
 The technician puts the core in and writes it up. That is all.
 He is not to be given the reasons. If he asks, give him the policy
