@@ -34,6 +34,10 @@ files:
     src: var/log/facility.log
   - path: /var/log/glados.log
     src: var/log/glados.log
+  - path: /var/log/facility-2010-q3.log
+    src: var/log/facility-2010-q3.log
+  - path: /etc/cron.d/central
+    src: etc/cron.d/central
   - path: /var/log/corectl.log
     src: var/log/corectl.log
   - path: /var/mail/drattman
@@ -89,6 +93,7 @@ files:
 
 # closed until a chapter does:  unlock: /path
 locked:
+  - /etc/cron.d
   - /opt/aperture/runbooks
   - /home/aokafor
   - /home/cbell

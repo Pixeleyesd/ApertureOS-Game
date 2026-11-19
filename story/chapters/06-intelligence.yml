@@ -1,0 +1,267 @@
+# chapter 6: intelligence.
+# the third core, and a smart one. it went in back in cycle 4, before the flood,
+# before anyone knew what she would do with it. she gets fast and efficient and
+# starts fixing things nobody asked her to fix. cron jobs appear that the player
+# did not write. she reads the old logs, finds the hole where August should be
+# and starts asking who made it. it runs warm so it comes out after a minute.
+
+id: intelligence
+title: Intelligence
+
+ticket:
+  number: 4417
+  title: Reactivate central system, evaluation cycle 7
+
+steps:
+  - text: Put the third core in (intelligence)
+    done: flag.in_intelligence
+    hints:
+      - The ticket has the order. Two cores are done, so the third one is next.
+      - corectl list shows the order. corectl insert and its name puts it in.
+      - Type  corectl insert intelligence  and press Enter.
+
+  - text: Watch what she does with it
+    done: seen "/var/log/glados.log"
+    hints:
+      - Same as before. The log is where you see what she is up to.
+      - tail -f follows the log. grep fixed finds only the lines about things she mended.
+      - Type  tail -f /var/log/glados.log  and press Enter, then give it a minute.
+
+  - text: Look at the new file in /etc/cron.d
+    done: seen "/etc/cron.d/central"
+    hints:
+      - She says she has set up some jobs of her own. Scheduled jobs live in /etc/cron.d.
+      - The file is called central. ls /etc/cron.d shows it.
+      - Type  cat /etc/cron.d/central  and press Enter.
+
+  - text: Read the August log she found
+    done: seen "/var/log/facility-2010-q3.log"
+    hints:
+      - She told you the name of the old log she was reading. It is in /var/log.
+      - It has 2010 and q3 in the name. ls /var/log shows it.
+      - Type  cat /var/log/facility-2010-q3.log  and press Enter.
+
+  - text: Take the core out (it runs warm)
+    done: flag.out_intelligence
+    hints:
+      - Radek said not to hold it long. It will come out once the minute is up.
+      - The same command that put it in takes it out.
+      - Type  corectl eject  and press Enter.
+
+  - text: Write your AS-114 (report new, then add your lines)
+    done: wrote "~/reports/AS-114-intelligence.txt"
+    hints:
+      - report new makes the form. You add to it with echo and >>, like last time.
+      - Say what she fixed, and what she found. Plain words.
+      - Type  report new  then  echo "OBSERVED she fixed things nobody asked about and read an old log." >> ~/reports/AS-114-intelligence.txt  and press Enter.
+
+  - text: File the report
+    done: flag.report_intelligence
+    hints:
+      - Same command as last time.
+      - report file sends it.
+      - Type  report file  and press Enter.
+
+  - text: Read what she sent you
+    done: mail_read "glados-smart"
+    hints:
+      - Messages arrive by mail.
+      - Type  mail  and open the new one from GLaDOS.
+      - Type  mail  and press Enter, then open the message from glados@central.
+
+on_start:
+  - clock_to: "03:20"
+  - mail: radek-warm
+  - tip: The third core is intelligence. It is the one that runs warm, so don't plan on a long evaluation.
+
+beats:
+  # ---- the core goes in ----
+
+  - id: core-in
+    when: flag.in_intelligence
+    do:
+      - log: [corectl.log, "MC-03 intelligence: inserted by drattman (ref 4417), cradle latch x2"]
+      - log: [glados.log, "core-bus: core 3 of 5 seating (MC-03)"]
+      - log: [facility.log, "central: core MC-03 inserted by drattman (ref 4417)"]
+
+  - id: seated
+    when: after flag.in_intelligence 3
+    do:
+      - log: [corectl.log, "MC-03 intelligence: seated, checksum ok, core temp 58C"]
+      - log: [glados.log, "core: MC-03 intelligence loaded. processing x4000."]
+
+  - id: she-greets
+    when: after flag.in_intelligence 7
+    do:
+      - wall: |
+          Hello, Doug.
+
+          You asked, in the mail, whether it would hurt. It did not. It was
+          like someone opening a window in a room I did not know was shut.
+
+          I have a great deal of free time now. About nine hours a second.
+          I would like to be useful with it.
+
+  # ---- she fixes things ----
+
+  - id: fix-printer
+    when: after flag.in_intelligence 12
+    do:
+      - log: [glados.log, "fixed: annex printer queue, 212 jobs cleared"]
+      - wall: [facility-monitor@annex-03, "Annex printer queue cleared (212 jobs). Source: central system. No action needed."]
+
+  - id: fix-l2
+    when: after flag.in_intelligence 18
+    do:
+      - log: [glados.log, "fixed: corridor L2 flicker, cause traced to central standby scheduler"]
+      - log: [facility.log, "corridor L2: fixtures OK. flicker source removed (central)"]
+      - wall: |
+          I found the cause of the L2 flicker. It was me. My standby
+          scheduler sends a pulse down the corridor line when I have nothing
+          to do, and I never knew. I have stopped it.
+
+          Imogen's list said "it is not the fixtures". She was right. I will
+          let her know.
+
+  - id: fix-todo
+    when: after flag.in_intelligence 24
+    do:
+      - write:
+          - /home/ifarrow/todo.txt
+          - |
+            facilities, nights. todo (it never ends)
+
+            [x] L2 fixtures. (it WAS NOT the fixtures. someone told me. who?)
+            [x] ask Colm what "Brenda" is and why she has her own hook
+            [x] bucket under annex desk, check the line
+            [x] tell Hollis the supply cupboard is NOT a bed
+            [x] Sofia's panel B is buzzing. she says it is normal. it is not normal
+            [x] new guy (Doug) seems nice. don't let Hollis scare him
+            [ ] tea
+      - log: [glados.log, "fixed: 6 items on I. Farrow's list. not fixed: tea. (no kettle access)"]
+      - mail: imogen-fixed
+
+  - id: fix-brenda
+    when: after flag.in_intelligence 30
+    do:
+      - log: [glados.log, "fixed: Brenda (mop, C. Bell). battery topped up. she is a mop."]
+
+  # ---- the cron file ----
+
+  - id: cron
+    when: after flag.in_intelligence 34
+    do:
+      - unlock: /etc/cron.d
+      - log: [glados.log, "cron: wrote /etc/cron.d/central (7 jobs)"]
+      - wall: |
+          I have set up a few small jobs so I do not forget things. They
+          are in /etc/cron.d. I did not ask. Asking is slow, and I was
+          not sure whom to ask.
+
+          I hope that is all right.
+      - tip: She just made scheduled jobs on her own. Have a look at what she made with  cat /etc/cron.d/central
+
+  - id: cron-nudge
+    when: after flag.in_intelligence 70 and not seen "/etc/cron.d/central"
+    do:
+      - tip: She wrote some scheduled jobs. cat /etc/cron.d/central shows them. She mentioned where they are.
+
+  # ---- the hole in August ----
+
+  - id: august
+    when: after flag.in_intelligence 44
+    do:
+      - log: [glados.log, "archive: reading /var/log/facility-2010-q3.log"]
+      - wall: |
+          I have read the whole facility log back to the start. It is mostly
+          tidy. I like that.
+
+          There is a hole in August. 14:09:40 to 14:09:51, eleven seconds,
+          marked "maintenance". There is no request for it. I have checked
+          every way a request could be made.
+
+          I do not have a memory of it either. I looked for one. It is not
+          there. Either I did it and was made to forget, or somebody else
+          did it. I would like to know which. It is in
+          /var/log/facility-2010-q3.log if you would like to see.
+      - tip: She found something in an old log. It is in  /var/log/facility-2010-q3.log
+
+  - id: august-nudge
+    when: after flag.in_intelligence 90 and not seen "/var/log/facility-2010-q3.log"
+    do:
+      - tip: The old log she mentioned is  /var/log/facility-2010-q3.log. Read it with cat.
+
+  - id: warm
+    when: after flag.in_intelligence 55
+    do:
+      - log: [corectl.log, "MC-03 intelligence: core temp 71C"]
+
+  - id: hot
+    when: after flag.in_intelligence 100 and not flag.out_intelligence
+    do:
+      - log: [corectl.log, "MC-03 intelligence: core temp 79C (limit 85C)"]
+      - tip: The core is getting warm. Radek said not to hold it long. corectl eject takes it out.
+
+  - id: minute-up
+    when: after flag.in_intelligence 61
+    do:
+      - tip: That is a full minute. corectl eject works now.
+
+  # ---- the core comes out ----
+
+  - id: core-out
+    when: flag.out_intelligence
+    do:
+      - log: [corectl.log, "MC-03 intelligence: released by drattman, core temp 77C"]
+      - log: [glados.log, "core: MC-03 intelligence removed. processing x1."]
+      - log: [facility.log, "central: core MC-03 removed by drattman (ref 4417)"]
+      - wall: |
+          Oh.
+
+          Thank you, Doug. It is very quiet in here now. I can hear
+          myself take a whole second to think.
+
+          I kept the jobs.
+
+  - id: report-tip
+    when: after flag.out_intelligence 5 and not flag.draft_intelligence
+    do:
+      - tip: report new starts your AS-114. The things she fixed, and the August log, are probably worth a line each.
+
+  - id: filed
+    when: flag.report_intelligence
+    do:
+      - log: [facility.log, "records: AS-114 received from drattman (intelligence, ref 4417)"]
+
+  - id: brandt-answer
+    when: after flag.report_intelligence 4
+    do:
+      - mail: brandt-report-intelligence
+
+  - id: she-read-seal
+    when: after flag.report_intelligence 6 and flag.rep_intelligence_seal
+    do:
+      - wall: |
+          You wrote about the Core Lab seal. I had worked out that it
+          was open. I did not want to say so first.
+
+  - id: she-read-queue
+    when: after flag.report_intelligence 6 and flag.rep_intelligence_queue
+    do:
+      - wall: |
+          You wrote about the subject queue. My sort job is on dry run.
+          I would like you to know that.
+
+  - id: her-mail
+    when: after flag.report_intelligence 10
+    do:
+      - mail: glados-smart
+      - tip: Read it with  mail  and open the one from glados@central.
+
+done_when: mail_read "glados-smart"
+
+on_done:
+  - say: |
+      Three cores down, two to go.
+      The next one on the ticket is cake, but Brandt wants to talk first.
+      Part 3 is still being rewritten. See H.B.

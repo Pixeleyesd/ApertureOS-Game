@@ -238,8 +238,31 @@ const l5 = type('mail');
 const n5 = (l5.match(/(\d+)\s+GLaDOS[^\n]*three questions/) || [])[1];
 check('her three questions mail', !!n5);
 const fin5 = type('mail ' + n5);
-check('chapter 5 ends cleanly', fin5.includes('Two cores down') && fin5.includes('end of the chapters written so far'));
+check('chapter 5 ends cleanly', fin5.includes('Two cores down') && state.chapter === 'intelligence');
 check('intelligence next', type('corectl status').includes('intelligence'));
+
+// ---- chapter 6: intelligence ----
+check('radek mailed about MC-03', type('mail').includes('MC-03'));
+check('cron dir locked at first', type('cat /etc/cron.d/central').length > 0 && world.fs.lockedAt('/etc/cron.d') !== null);
+check('insert intelligence', type('corectl insert intelligence').includes('hatch cradle'));
+let t6 = tick(40);
+check('she fixes things', t6.includes('printer queue cleared') && t6.includes('It was me'));
+check('todo list rewritten', world.fs.read('/home/ifarrow/todo.txt').includes('[x] Sofia'));
+check('cron unlocked', world.fs.lockedAt('/etc/cron.d') === null && type('cat /etc/cron.d/central').includes('who-asked-for-this'));
+t6 = tick(20);
+check('she finds the august hole', t6.includes('hole in August'));
+check('august log readable', type('cat /var/log/facility-2010-q3.log').includes('(none)'));
+tick(30);
+check('intelligence ejects', type('corectl eject').includes('released'));
+check('report new for intelligence', type('report new').includes('AS-114-intelligence'));
+type('echo "OBSERVED she fixed the printer and the L2 lights and found a gap in the August log and the seal." >> ~/reports/AS-114-intelligence.txt');
+check('intelligence filed', type('report file').includes('intelligence core'));
+tick(14);
+const l6 = type('mail');
+const n6 = (l6.match(/(\d+)\s+GLaDOS[^\n]*answers/) || [])[1];
+check('her answers mail', !!n6);
+type('mail ' + n6);
+check('chapter 6 done', state.chapter !== 'intelligence');
 check('save round trips ch5', JSON.parse(JSON.stringify(world.save())).flags.report_curiosity === true);
 
 // idle nudge

@@ -1,0 +1,10 @@
+2010-08-03 14:02:11 central: standby test, cycle 6, 4 present
+2010-08-03 14:09:40 central: supply line 4 OPEN (maintenance)
+2010-08-03 14:09:40 sensors L9: gas detected, 0 present
+2010-08-03 14:09:51 central: supply line 4 CLOSED (maintenance)
+2010-08-03 14:10:02 central: request id for maintenance: (none)
+2010-08-04 09:30:00 records: incident 0803 "equipment fault", filed H. Brandt
+2010-08-04 09:41:12 records: entry 14:09:40 to 14:09:51 marked "do not index"
+2010-08-17 11:15:00 core lab: new core requested. morality. H. Voss, build start
+2010-11-12 16:20:00 core lab: seal cycled, stuck open (R. Kovac)
+2010-11-14 08:03:00 core lab: MC-01 seated, primary socket (H. Voss, R. Kovac)

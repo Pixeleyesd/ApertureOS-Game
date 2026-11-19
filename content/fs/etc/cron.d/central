@@ -1,0 +1,11 @@
+# /etc/cron.d/central
+# added by central (uid 100). nobody asked for this file.
+# m   h  dom mon dow  user     command
+
+*/1   *  *   *   *    glados   seal-poll --panel 3 --read-only
+*/5   *  *   *   *    glados   printer-queue --clear --reason "it is 212 jobs"
+*/15  *  *   *   *    glados   corridor-L2 --trace-flicker --fix
+0     *  *   *   *    glados   mop-battery --name Brenda --charge
+30    3  *   *   *    glados   queue-sort --by tenacity --dry-run
+0     9  19  5   *    glados   greet --group "daughters" --tone "warm"
+0     0  *   *   *    glados   supply-line --id 4 --who-asked-for-this
