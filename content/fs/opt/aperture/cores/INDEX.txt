@@ -8,3 +8,4 @@ cake           approved for cycle 7, fourth in order. (requested by
 anger          approved for cycle 7, fifth in order.
 
 All cores are inserted by hand and only by the evaluating technician.
+MC-01 and MC-05 both use the primary socket. The rest use the annex cradle.

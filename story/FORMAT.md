@@ -137,4 +137,8 @@ body: |
 
 `corectl` and `report` (in `src/commands/cores.js`) set flags the story can use: `in_morality` / `out_morality` (core put in / taken out), `draft_morality` (report started), `report_morality` (report filed), plus `report_seal`, `report_queue` and `report_policy` depending on what the player wrote. Swap the core name for the other cores. The next core only goes in once the last one has been taken out and reported on.
 
+`reply` (in `src/commands/reply.js`) is how the player answers a question. To ask one, set `flag.asking = q1` in a beat and print the question. The answer comes back as the flags `q1_yes`, `q1_no` and `q1_why` (use any name instead of `q1`). `reply why` works once per question and leaves it open. A yes or no closes it.
+
+`report` also sets `rep_<core>_seal`, `rep_<core>_queue`, `rep_<core>_policy` and `rep_<core>_folders` depending on the words the player wrote, so each core's chapter can answer its own report.
+
 A command is one object in `src/commands/`: a name, a one-line summary, usage, a plain-language description, examples, and a `run` function. Those fields are what `help` and `man` show, so write them for someone who has never used a terminal. Commands that appear later in the story are defined with `locked: true` and opened with `unlock_cmd`. A later entry in `src/commands/index.js` replaces an earlier one of the same name, so a chapter's real `systemctl` can replace the stub.

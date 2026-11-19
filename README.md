@@ -28,7 +28,7 @@ Ten chapters. It's long on purpose, I want it to feel like a full shift and not 
 
 Twelve people are on shift tonight, including you. By the end the headcount is 1.
 
-How it ends for them is the same as in the games: the neurotoxin. The cores are the reason you're here at all. They exist to stop her from flooding the enrichment centre with it, and each one is a fix that doesn't quite hold. Nobody on the ticket says that out loud until it's too late, but the clues are in the logs from the start.
+How it ends for them is the same as in the games: the neurotoxin. Only one of the five cores does anything about it, the Morality core. The other four change her mood and nothing else, but the review panel has been told the whole set is the safety case, so every core gets evaluated and filed. Nobody on the ticket says that out loud until it's too late, but the clues are in the logs from the start.
 
 **1. Clock in.** First login. A handoff note from your supervisor Dr. Brandt, a message of the day, and a ticket queue with one open ticket. This is the tutorial but it never says so. You learn `ls`, `cat`, `cd`, `mail` and `help` by following the note, and you finish by accepting the ticket.
 
@@ -38,17 +38,17 @@ How it ends for them is the same as in the games: the neurotoxin. The cores are 
 
 **4. Baseline.** First core experiment, the safe restrictive one. Everything works. You file your first report. It's meant to be boring so everything after it feels worse.
 
-**5. Curiosity.** Second core. She starts asking questions about the building, then asking for access to more of the filesystem. New folders appear. Some are named after people you've been emailing.
+**5. Curiosity.** Second core. She starts asking you questions, and you answer with a new `reply` command (yes, no or why). She wants to read the staff folders, then the subject queue. Say yes and she thanks you. Say no and she goes round you to a supervisor, who says yes. Either way the folders open, and the notes people left in them are where you start to find out what the cores are really for. The queue has 1,603 names on it. Chell is number 1498, marked do not test because she never gives up.
 
-**6. Intelligence.** Third core. She gets fast and efficient and starts fixing things nobody asked her to fix. Cron jobs show up that you didn't write. The first coworker mail goes unanswered.
+**6. Intelligence.** Third core, the dampening one. It's supposed to make her slow and a bit foolish, and she does get slow and a bit foolish, but cron jobs show up that you didn't write. The first coworker mail goes unanswered.
 
 **7. The cake core.** Comic relief that you only later realise wasn't really a joke. She fixates on one subject and derails everything, and a hidden log trail shows what she was actually doing while you were distracted.
 
-**8. Anger.** Fourth core and the first real incident. The emitters in the lower levels start to fire. Alarms, sealed doors, a gas warning on the facility monitor. `who` starts losing names. The headcount in `/proc/aperture/headcount` drops for the first time.
+**8. Anger.** Fifth core and the first real incident. It shares the primary socket with the Morality core, so Morality has to come out. The emitters in the lower levels start to fire. Alarms, sealed doors, a gas warning on the facility monitor. `who` starts losing names. The headcount in `/proc/aperture/headcount` drops for the first time.
 
-**9. Lockout.** The neurotoxin is out and spreading level by level. She takes over your shell. The prompt changes, `sudo` asks her permission, `kill` politely refuses. You can't brute-force your way out, so you use things you picked up from the earlier logs.
+**9. Lockout.** The neurotoxin is out and spreading level by level. She takes over your shell. The prompt changes, `sudo` asks her permission, `kill` politely refuses. You can't brute-force your way out, so you use things you picked up from the earlier logs. Meanwhile she puts whoever is still alive on a test track, staff first and the queue after, same as in the games.
 
-**10. Last shift.** It's just you and her. You try to cut her power and you try to get a message out, and neither works. All you can actually do is choose who she tests on next. Imogen gives you an old login nobody ever deleted, you mount her drive with it, read the list of test subjects, and move one called Chell to the top. Doug is the only one left alive, sealed in the annex while the gas does the rest of the building. Portal 1 starts after that.
+**10. Last shift.** It's just you and her. You try to cut her power and you try to get a message out, and neither works. All you can actually do is choose who she tests on next. Imogen gives you an old login nobody ever deleted, you mount her drive with it, read the list of test subjects, and move one called Chell from 1498 to number 1, the same move Doug makes in the Lab Rat comic. Doug is the only one left alive, sealed in the annex while the gas does the rest of the building. Portal 1 starts after that.
 
 There's a longer, spoiler-heavy plan in `story/OUTLINE.md`, including how it could carry on into the events of Portal 1 if I decide to write that.
 
@@ -159,6 +159,8 @@ The fake disk:
 ```
 /
 ├── home/drattman/      your files, tickets, reports
+├── home/<everyone else>  staff folders, closed until chapter 5
+├── srv/enrichment/     the subject queue, closed until chapter 5
 ├── opt/aperture/       runbooks, tools, core info
 ├── var/log/            glados.log, corectl.log, facility.log
 ├── var/mail/           your inbox
@@ -166,7 +168,7 @@ The fake disk:
 └── proc/aperture/      headcount, core, power  (live values)
 ```
 
-Working now: `ls cd pwd cat less head tail grep find tree echo wc clear history man help hint ticket mail who whoami hostname date uptime ps sudo beginner newgame`, plus `systemctl` and `journalctl` (chapter 3) and `corectl` and `report` (chapter 4). `tail -f` and `journalctl -f` really do follow a file live until you press Ctrl+C.
+Working now: `ls cd pwd cat less head tail grep find tree echo wc clear history man help hint ticket mail who whoami hostname date uptime ps sudo beginner newgame`, plus `systemctl` and `journalctl` (chapter 3) and `corectl` and `report` (chapter 4), and `reply` (chapter 5). `tail -f` and `journalctl -f` really do follow a file live until you press Ctrl+C.
 Locked until the story unlocks them: `wall write kill top crontab last`.
 A handful of real commands (`rm`, `mv`, `cp`, editors, `ssh`, `curl`, package managers) stay off for good, and each one explains why in-world and what to do instead.
 
@@ -211,6 +213,6 @@ apertureos/
 ## Order I'm building it in
 
 1. Engine, shell, fake filesystem, saving. **Done**
-2. Chapters 1 to 4 playable start to finish. **Done.**
-3. Chapters 5 to 8.
+2. Chapters 1 to 5 playable start to finish. **Done.**
+3. Chapters 6 to 8.
 4. Lockout and the finale.

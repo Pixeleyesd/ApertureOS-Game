@@ -57,6 +57,46 @@ files:
   - path: /proc/aperture/seal
     src: proc/aperture/seal
 
+  # staff folders. closed until chapter 5 lets central read them
+  - path: /home/aokafor/cycle7-design.txt
+    src: staff/aokafor/cycle7-design.txt
+  - path: /home/cbell/brenda.txt
+    src: staff/cbell/brenda.txt
+  - path: /home/hbrandt/cycle6-notes.txt
+    src: staff/hbrandt/cycle6-notes.txt
+  - path: /home/ifarrow/todo.txt
+    src: staff/ifarrow/todo.txt
+  - path: /home/jpark/track-notes.txt
+    src: staff/jpark/track-notes.txt
+  - path: /home/mliu/override-4402.txt
+    src: staff/mliu/override-4402.txt
+  - path: /home/nabbott/seal-history.txt
+    src: staff/nabbott/seal-history.txt
+  - path: /home/rkovac/lab-notes.txt
+    src: staff/rkovac/lab-notes.txt
+  - path: /home/sdelgado/power-notes.txt
+    src: staff/sdelgado/power-notes.txt
+  - path: /home/twren/notes.txt
+    src: staff/twren/notes.txt
+  - path: /home/wmbeki/rounds.txt
+    src: staff/wmbeki/rounds.txt
+  - path: /srv/enrichment/README.txt
+    src: srv/enrichment/README.txt
+  - path: /srv/enrichment/queue.txt
+    src: srv/enrichment/queue.txt
+
 # closed until a chapter does:  unlock: /path
 locked:
   - /opt/aperture/runbooks
+  - /home/aokafor
+  - /home/cbell
+  - /home/hbrandt
+  - /home/ifarrow
+  - /home/jpark
+  - /home/mliu
+  - /home/nabbott
+  - /home/rkovac
+  - /home/sdelgado
+  - /home/twren
+  - /home/wmbeki
+  - /srv/enrichment

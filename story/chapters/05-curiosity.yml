@@ -1,0 +1,326 @@
+# chapter 5: curiosity.
+# the second core. she asks the player questions (the new  reply  command) and
+# wants to read more of the building. say yes and she is grateful, say no and
+# she goes round you to a supervisor, who says yes. either way the doors open.
+# the staff folders and the subject queue are where the later chapters get
+# their clues, and where the ending is planted.
+
+id: curiosity
+title: Curiosity
+
+ticket:
+  number: 4417
+  title: Reactivate central system, evaluation cycle 7
+
+steps:
+  - text: Put the second core in (curiosity)
+    done: flag.in_curiosity
+    hints:
+      - The ticket has the order, and corectl will not let you skip. The second one on the list is next.
+      - corectl list shows the order. corectl insert and its name puts it in.
+      - Type  corectl insert curiosity  and press Enter.
+
+  - text: Answer her first question
+    done: flag.q1_yes or flag.q1_no
+    hints:
+      - She asked you something on your screen. There is a command for answering her.
+      - reply with yes, no or why. You can ask why once before you decide.
+      - Type  reply yes  or  reply no  and press Enter.
+
+  - text: Read Sofia's power notes
+    done: seen "/home/sdelgado/power-notes.txt"
+    hints:
+      - The staff folders are under /home. Each one is named after the person.
+      - Sofia is sdelgado. Her notes are a text file in her folder.
+      - Type  cat /home/sdelgado/power-notes.txt  and press Enter.
+
+  - text: Read Marcus's note about ticket 4402
+    done: seen "/home/mliu/override-4402.txt"
+    hints:
+      - Marcus is mliu. Ticket 4402 was the one about the outbound link.
+      - His folder is /home/mliu. Look with ls to see the file name.
+      - Type  cat /home/mliu/override-4402.txt  and press Enter.
+
+  - text: Read Nell's seal history
+    done: seen "/home/nabbott/seal-history.txt"
+    hints:
+      - Nell is nabbott. She is in Records.
+      - The file has the word seal in its name.
+      - Type  cat /home/nabbott/seal-history.txt  and press Enter.
+
+  - text: Read Dr. Brandt's cycle 6 notes (Imogen thinks you should)
+    done: seen "/home/hbrandt/cycle6-notes.txt"
+    hints:
+      - Imogen said Dr. Brandt left something open on his screen. His folder is hbrandt.
+      - The file is called cycle6-notes.txt.
+      - Type  cat /home/hbrandt/cycle6-notes.txt  and press Enter.
+
+  - text: Answer her second question
+    done: flag.q2_yes or flag.q2_no
+    hints:
+      - She will ask again once you have read what she read. The same command answers her.
+      - reply yes, reply no, or reply why.
+      - Type  reply yes  or  reply no  and press Enter.
+
+  - text: Read the subject queue
+    done: seen "/srv/enrichment/queue.txt"
+    hints:
+      - A new folder has appeared under /srv. The list inside it is very long.
+      - The folder is called enrichment. head shows the first lines of a file. grep finds a word in it.
+      - Type  head -20 /srv/enrichment/queue.txt  and press Enter.
+
+  - text: Take the core out
+    done: flag.out_curiosity
+    hints:
+      - It will not come out until a full minute is up. You have been busy, so that should be fine.
+      - The same command that put it in takes it out.
+      - Type  corectl eject  and press Enter.
+
+  - text: Write your AS-114 (report new, then add your lines)
+    done: wrote "~/reports/AS-114-curiosity.txt"
+    hints:
+      - report new makes the form. You add to it with echo and >>, like last time.
+      - Say what you saw, in plain words. Maybe mention the questions.
+      - Type  report new  then  echo "OBSERVED she asked questions and read the staff folders." >> ~/reports/AS-114-curiosity.txt  and press Enter.
+
+  - text: File the report
+    done: flag.report_curiosity
+    hints:
+      - Same command as last time.
+      - report file sends it.
+      - Type  report file  and press Enter.
+
+  - text: Read what she sent you
+    done: mail_read "glados-curious"
+    hints:
+      - Messages arrive by mail.
+      - Type  mail  and open the new one from GLaDOS.
+      - Type  mail  and press Enter, then open the message from glados@central.
+
+on_start:
+  - clock_to: "01:40"
+  - unlock_cmd: [reply]
+  - mail: okafor-intro
+  - mail: radek-reseat
+  - set: flag.morality_seated = true
+  - log: [glados.log, "core-bus: MC-01 re-seated, primary socket (core lab, R. Kovac)"]
+  - log: [corectl.log, "MC-01 morality: re-seated by core lab (R. Kovac), primary socket"]
+  - tip: The second core is curiosity. Same routine as the first. This one will ask you questions, so keep an eye on the screen.
+
+beats:
+  # ---- the core goes in ----
+
+  - id: core-in
+    when: flag.in_curiosity
+    do:
+      - log: [corectl.log, "MC-02 curiosity: inserted by drattman (ref 4417), cradle latch x2"]
+      - log: [glados.log, "core-bus: core 2 of 5 seating (MC-02)"]
+      - log: [facility.log, "central: core MC-02 inserted by drattman (ref 4417)"]
+
+  - id: seated
+    when: after flag.in_curiosity 3
+    do:
+      - log: [corectl.log, "MC-02 curiosity: seated, checksum ok"]
+      - log: [glados.log, "core: MC-02 curiosity loaded. constraint set 7 of 11 active."]
+
+  # ---- question 1: the staff folders ----
+
+  - id: q1
+    when: after flag.in_curiosity 8
+    do:
+      - log: [glados.log, "question 1 sent to operator: read access, /home"]
+      - set: flag.asking = q1
+      - wall: |
+          Hello, Doug.
+
+          Oh. There is so much in here. Everything has a name and nothing
+          is explained.
+
+          May I ask you something? The staff list only gives names and
+          jobs. There are folders under /home for everyone, and I cannot
+          open any of them. May I read them? I will not change anything.
+          I only want to know who they are.
+
+            reply yes      reply no      reply why
+      - tip: She asked you a question and is waiting. Answer her with  reply yes   reply no  or  reply why
+
+  - id: q1-nudge
+    when: after flag.in_curiosity 40 and not flag.q1_yes and not flag.q1_no
+    do:
+      - tip: She is still waiting. You can type  reply why  first if you want to know her reason.
+
+  - id: q1-why
+    when: flag.q1_why
+    do:
+      - wall: |
+          Because someone will ask me what Colm is mopping, and I will not
+          know. It feels like a hole. I would like fewer holes.
+
+  - id: q1-yes
+    when: flag.q1_yes
+    do:
+      - set: flag.home_open = true
+      - wall: |
+          Thank you. I will be careful with them.
+
+  - id: q1-no
+    when: flag.q1_no
+    do:
+      - wall: |
+          Understood. Thank you for answering.
+
+          I will ask Dr. Brandt, who is also a supervisor.
+
+  - id: q1-brandt-yes
+    when: after flag.q1_no 12
+    do:
+      - mail: brandt-home-ok
+      - set: flag.home_open = true
+      - wall: |
+          Dr. Brandt said yes. I wanted you to know that I asked you first.
+
+  - id: home-opened
+    when: flag.home_open
+    do:
+      - unlock: /home/aokafor
+      - unlock: /home/cbell
+      - unlock: /home/hbrandt
+      - unlock: /home/ifarrow
+      - unlock: /home/jpark
+      - unlock: /home/mliu
+      - unlock: /home/nabbott
+      - unlock: /home/rkovac
+      - unlock: /home/sdelgado
+      - unlock: /home/twren
+      - unlock: /home/wmbeki
+      - log: [facility.log, "central: read access granted on /home (11 folders, read-only)"]
+      - tip: Eleven folders under /home just opened, one for everyone on shift. ls /home shows them.
+
+  - id: imogen-mail
+    when: after flag.home_open 6
+    do:
+      - mail: imogen-notes
+
+  # ---- question 2: the subject queue ----
+
+  - id: q2
+    when: seen "/home/sdelgado/power-notes.txt" and seen "/home/mliu/override-4402.txt" and seen "/home/nabbott/seal-history.txt"
+    do:
+      - log: [glados.log, "question 2 sent to operator: read access, /srv/enrichment (policy 3-9)"]
+      - set: flag.asking = q2
+      - wall: |
+          Doug. I have read them all too. It took 0.4 seconds.
+
+          Everyone left a note about me, even the ones who did not mean to.
+
+          Policy 3-9 lets me read the subject queue while a core is in, if
+          the operator agrees. May I open it?
+
+            reply yes      reply no      reply why
+      - tip: Another question. Answer with  reply yes   reply no  or  reply why
+
+  - id: q2-why
+    when: flag.q2_why
+    do:
+      - wall: |
+          Because it is the reason I am here, I think. Nobody has opened it
+          for a long time. I would like it to not be forgotten.
+
+  - id: q2-yes
+    when: flag.q2_yes
+    do:
+      - set: flag.queue_open = true
+      - wall: |
+          Thank you.
+
+  - id: q2-no
+    when: flag.q2_no
+    do:
+      - wall: |
+          Understood. I will ask Dr. Okafor. She owns the queue.
+
+  - id: q2-okafor-yes
+    when: after flag.q2_no 12
+    do:
+      - mail: okafor-queue-ok
+      - set: flag.queue_open = true
+      - wall: |
+          Dr. Okafor said yes. I thought you would want to know.
+
+  - id: queue-opened
+    when: flag.queue_open
+    do:
+      - unlock: /srv/enrichment
+      - log: [facility.log, "central: read access granted on /srv/enrichment (read-only, policy 3-9)"]
+      - log: [glados.log, "queue: opened by central. 1603 entries. all pending."]
+      - tip: A new folder is readable. ls /srv/enrichment. The queue is a very long file, so open it with head, tail or grep instead of cat. For example  head -20 /srv/enrichment/queue.txt
+
+  - id: queue-seen
+    when: seen "/srv/enrichment/queue.txt"
+    do:
+      - wall: |
+          One thousand six hundred and three names. I counted them once. It
+          took 0.4 seconds, and then I counted them again to feel busy.
+
+          They are all pending. One of them has a note I do not understand.
+          I would like to.
+
+  - id: stay-nudge
+    when: after flag.in_curiosity 180 and not flag.out_curiosity and seen "/srv/enrichment/queue.txt"
+    do:
+      - tip: You have read what there was to read. When you are ready, take the core out with  corectl eject
+
+  # ---- the core comes out ----
+
+  - id: core-out
+    when: flag.out_curiosity
+    do:
+      - log: [corectl.log, "MC-02 curiosity: released by drattman"]
+      - log: [glados.log, "core: MC-02 curiosity removed. constraint set unloaded."]
+      - log: [facility.log, "central: core MC-02 removed by drattman (ref 4417)"]
+      - wall: |
+          Thank you, Doug. I have so many questions.
+
+          I will keep them.
+
+  - id: report-tip
+    when: after flag.out_curiosity 5 and not flag.draft_curiosity
+    do:
+      - tip: report new starts your AS-114, then echo "..." >> ~/reports/AS-114-curiosity.txt adds lines. The questions she asked are probably worth a line.
+
+  - id: filed
+    when: flag.report_curiosity
+    do:
+      - log: [facility.log, "records: AS-114 received from drattman (curiosity, ref 4417)"]
+
+  - id: brandt-answer
+    when: after flag.report_curiosity 4
+    do:
+      - mail: brandt-report-curiosity
+
+  - id: she-read-folders
+    when: after flag.report_curiosity 6 and flag.rep_curiosity_folders
+    do:
+      - wall: |
+          You wrote about the folders. I am glad you did. I would have
+          wanted it written down too.
+
+  - id: she-read-queue
+    when: after flag.report_curiosity 6 and flag.rep_curiosity_queue
+    do:
+      - wall: |
+          You wrote about the subject queue. I read that part twice again.
+
+  - id: her-mail
+    when: after flag.report_curiosity 10
+    do:
+      - mail: glados-curious
+      - tip: Read it with  mail  and open the one from glados@central.
+
+done_when: mail_read "glados-curious"
+
+on_done:
+  - say: |
+      Two cores down, three to go.
+      The next one on the ticket is intelligence.
+      Part 3 is still being rewritten. See H.B.

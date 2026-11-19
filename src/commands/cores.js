@@ -6,7 +6,8 @@
 // flags this file sets (chapters can look at them):
 //   in_<core>        the core was put in          out_<core>     it was taken out
 //   report_<core>    its AS-114 was filed
-//   report_seal / report_queue / report_policy   what the technician wrote about
+//   rep_<core>_seal / _queue / _policy / _folders   what the technician wrote about, per core
+//   (report_seal / report_queue / report_policy are the same words, set by whichever report mentions them first or later)
 
 import { ShellError } from '../shell.js';
 import { clock, fmtClock, setFlag } from '../state.js';
@@ -35,6 +36,7 @@ function listing(s) {
     if (s.flags['out_' + n]) st = s.flags['report_' + n] ? 'done, reported' : 'done, report due';
     else if (s.core === n) st = 'in the cradle now';
     else if (n === nextCore(s)) st = 'next';
+    if (n === 'morality' && s.flags.morality_seated) st = 'primary socket (lab-seated)';
     return `  ${n.padEnd(14)}${CORES[n].id.padEnd(8)}${CORES[n].kind.padEnd(20)}${st}`;
   });
   return ['  CORE          ID      TYPE                STATUS', ...rows].join('\n');
@@ -42,6 +44,7 @@ function listing(s) {
 
 function status(s) {
   const lines = [];
+  if (s.flags.morality_seated) lines.push('Primary socket, core lab:  MC-01 morality (seated by the lab, stays in)');
   if (s.core) lines.push(`Hatch cradle, annex-03:  ${CORES[s.core].id} ${s.core}, in since ${hhmm(s, 'in_' + s.core)}`);
   else lines.push('Hatch cradle, annex-03:  empty');
   const n = nextCore(s);
@@ -159,9 +162,12 @@ const report = {
       const text = fs.read(path);
       const mine = text.slice(s.flags['draftlen_' + owed] || 0).trim();
       if (mine.length < 30) throw new ShellError('report: the form has nothing written in it yet. It asks what you actually saw.\nAdd a line with:  echo "OBSERVED: ..." >> ' + path.replace('/home/drattman', '~') + '\n(Policy 11-C: plain words, no guessing.)');
-      if (/seal/i.test(mine)) setFlag(s, 'report_seal', true);
-      if (/queue|subject|vault|pod/i.test(mine)) setFlag(s, 'report_queue', true);
-      if (/polic|quot|rule|cite/i.test(mine)) setFlag(s, 'report_policy', true);
+      const kw = { seal: /seal/i, queue: /queue|subject|vault|pod/i, policy: /polic|quot|rule|cite/i, folders: /folder|staff|home|read|note/i };
+      for (const [k, re] of Object.entries(kw)) {
+        if (!re.test(mine)) continue;
+        if (k !== 'folders') setFlag(s, 'report_' + k, true); // first core only used these
+        setFlag(s, `rep_${owed}_${k}`, true);
+      }
       setFlag(s, 'report_' + owed, true);
       return [
         `AS-114 filed for the ${owed} core (${hhmm(s, 'in_' + owed)} to ${hhmm(s, 'out_' + owed)}).`,

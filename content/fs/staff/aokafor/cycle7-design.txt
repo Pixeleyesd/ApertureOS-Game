@@ -1,0 +1,31 @@
+CYCLE 7, EVALUATION DESIGN                       A. Okafor
+
+What the review panel believes: that "the cores" are the safety case.
+All five of them, together.
+
+What the bench tests say: only MC-01 has ever held the supply line
+shut. The other four change how she behaves. None of them does anything
+about the line. I have written that on a sticky note and put the sticky
+note in a drawer.
+
+The panel will sign if it sees five clean evaluations on camera, one
+core at a time. So we seat them one at a time. MC-01 stays in the
+primary socket for all of it, except evaluation 1 (the panel wants it
+alone, for a minute, on tape) and except where the hardware makes us
+take it out (see 5). Radek re-seats it from the lab after the minute.
+
+  1  morality       the only one that holds the line.
+  2  curiosity      keeps her asking instead of doing.
+  3  intelligence   dampening core. slows her down. mostly.
+  4  cake           Tobias's idea. not mine. do not ask.
+  5  anger          shares the primary socket with MC-01. one or the
+                    other. do it last, and do it fast. see H.B.
+
+The technician puts the core in and writes it up. That is all.
+He is not to be given the reasons. If he asks, give him the policy
+number and not a word more.
+
+Staff remain eligible for testing under the 1980s policy if the queue
+runs short. Nobody has used it in years.
+
+If any of this goes wrong we will need it to be nobody's fault.

@@ -113,12 +113,12 @@ beats:
   - id: boot-16s
     when: after flag.glados_started 16
     do:
-      - log: [glados.log, "vault: relaxation vault power restored. pods powered 53 of 53. occupied 53."]
+      - log: [glados.log, "vault: relaxation vault power restored. pods powered 1603 of 1603. occupied 1603."]
 
   - id: boot-19s
     when: after flag.glados_started 19
     do:
-      - log: [glados.log, "queue: subject queue found. entries 53. status intact."]
+      - log: [glados.log, "queue: subject queue found. entries 1603. status intact."]
 
   - id: boot-22s
     when: after flag.glados_started 22

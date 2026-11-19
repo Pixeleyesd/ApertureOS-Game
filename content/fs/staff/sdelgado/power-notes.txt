@@ -1,0 +1,16 @@
+POWER SYSTEMS   manual cutoff   (S. Delgado)
+
+If central has to be taken down by hand and the software will not do it:
+
+  1. Breaker 7. It is in the ceiling of the annex, above the printer.
+     You need the long pole. The long pole is in Imogen's cupboard.
+  2. Pull it down and hold it. Central loses its own power in about
+     40 seconds.
+  3. Write down the time. Say it out loud so someone else hears it.
+
+WARNING: breaker 7 only drops central. It does NOT touch the emitter
+bus (the gas supply, separate power, sealed). That line stays live
+whatever you do to central. If you cut her off you have cut off her
+eyes, not her hands.
+
+Panel B in the annex buzzes. It always buzzes. That one is fine.

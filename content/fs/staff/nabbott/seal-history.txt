@@ -1,0 +1,15 @@
+RECORDS. CORE LAB SEAL, HISTORY ON FILE.      N. Abbott
+
+Installed:  2009-06-14   (work order 3318)
+Reason:     separation of the Core Lab and central from the supply to
+            emitter bank E (neurotoxin, hazard class 1). The seal is a
+            physical interlock. If it is open the supply line can be
+            charged from central.
+Last cycled: 2010-11-12, R. Kovac.   Status since: STUCK OPEN.
+Interlock:  bypassed on the same date (R. Kovac, verbal approval,
+            no form).
+
+Retention: 10 years.
+
+I have written a note on the runbook that item 7 is not optional. I
+would like it noted that I wrote it first.
