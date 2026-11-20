@@ -1,0 +1,191 @@
+# chapter 7: the dampener.
+# she has gotten too good, so Radek brings up the prototype that is not on the
+# ticket: MC-06, a core built to make her slower. it is cheerful, it never stops
+# talking, and it gets in everyone's way, her included. Okafor wants it off.
+# Brandt wants it on. nobody calls it anything but "the dampener" or "MC-06".
+# it is not on the ticket, so there is no AS-114 and nobody will admit it
+# happened. while it talks it lets things slip, and that is where the next
+# chapters get their warning.
+
+id: dampener
+title: The dampener
+
+ticket:
+  number: 4417
+  title: Reactivate central system, evaluation cycle 7 (addendum, H.B.)
+
+steps:
+  - text: Read Radek's mail about the core he brought up
+    done: mail_read "radek-dampener"
+    hints:
+      - Radek has sent you something. Messages come by mail.
+      - Type  mail  to see the list, then open the one from Radek.
+      - Type  mail  and press Enter, then open the message from rkovac@corelab.
+
+  - text: Put the dampener in (it is not on the ticket)
+    done: flag.in_dampener
+    hints:
+      - Dr. Brandt has added it to the ticket tonight. corectl will take it now.
+      - corectl list shows it at the bottom. corectl insert and its name puts it in.
+      - Type  corectl insert dampener  and press Enter.
+
+  - text: Watch what it does to her
+    done: seen "/var/log/glados.log"
+    hints:
+      - Same log as before. It is where you see what she is thinking.
+      - tail -f follows the log. Ctrl+C stops it.
+      - Type  tail -f /var/log/glados.log  and press Enter, then give it a minute.
+
+  - text: Read what the core itself logged
+    done: seen "/var/log/corectl.log"
+    hints:
+      - Every core writes to the core log. This one writes a lot.
+      - The log is called corectl.log, in /var/log.
+      - Type  cat /var/log/corectl.log  and press Enter.
+
+  - text: Take it out
+    done: flag.out_dampener
+    hints:
+      - It will not come out before the minute is up, same as the others.
+      - The same command that put it in takes it out.
+      - Type  corectl eject  and press Enter.
+
+  - text: Read what Radek says to do with it
+    done: mail_read "radek-safe"
+    hints:
+      - Another message will arrive once it is out.
+      - Type  mail  and open the new one from Radek.
+      - Type  mail  and press Enter, then open the message from rkovac@corelab.
+
+on_start:
+  - clock_to: "04:20"
+  - set: flag.dampener_ok = true
+  - mail: radek-dampener
+  - mail: brandt-dampener
+  - mail: okafor-no
+  - tip: Dr. Brandt has put a sixth core on the ticket. It is not on the list in INDEX.txt. Read Radek's mail first.
+
+beats:
+  # ---- it goes in ----
+
+  - id: core-in
+    when: flag.in_dampener
+    do:
+      - log: [corectl.log, "MC-06 dampener: inserted by drattman (ref 4417 addendum), cradle latch x2"]
+      - log: [glados.log, "core-bus: unlisted core seating (MC-06). not on cycle 7 order."]
+      - log: [facility.log, "central: core MC-06 inserted by drattman (ref 4417 addendum, H.B.)"]
+
+  - id: seated
+    when: after flag.in_dampener 3
+    do:
+      - log: [corectl.log, "MC-06 dampener: seated. checksum ok. (checksum has never once been wrong, it says)"]
+      - log: [glados.log, "core: MC-06 loaded. processing x4000 -> x0.4"]
+
+  - id: it-greets
+    when: after flag.in_dampener 5
+    do:
+      - wall: [core6@annex-03, "Hello! Hi. Is this the thing? This is the thing. Right. Hello, Doug, is it? It's Doug. Brilliant. I am going to be so useful."]
+
+  - id: she-notices
+    when: after flag.in_dampener 12
+    do:
+      - wall: |
+          Doug.
+
+          There is someone in here with me. He does not stop. I had nine
+          hours a second and now I have four hundred milliseconds, and he
+          is in all of them.
+
+          He has a number. MC-06. Six is not on the ticket. I counted
+          the ticket.
+
+  - id: it-leaks-1
+    when: after flag.in_dampener 20
+    do:
+      - log: [corectl.log, "MC-06 output: i was built to keep her busy. thinking about me instead of everything else. that's the plan. brilliant plan. do not tell her the plan"]
+      - wall: [core6@annex-03, "Can I tell you a secret? I am a distraction. A very, very good one. I was built to keep her thinking about me, so she does not get a go at the... the thing. The August thing. Do not tell her the August thing."]
+
+  - id: it-chaos
+    when: after flag.in_dampener 26
+    do:
+      - log: [facility.log, "corridor L2: flicker x2 (MC-06, accidental, apparently)"]
+      - wall: [facility-monitor@annex-03, "Corridor L2 flickered 2 times. Source: unlisted core MC-06. It says sorry."]
+      - mail: imogen-hi
+
+  - id: she-slows
+    when: after flag.in_dampener 32
+    do:
+      - log: [glados.log, "fixed: nothing. (queue: 31 messages from MC-06, all of them hello)"]
+      - wall: |
+          I have started three sentences in the last minute and finished
+          none of them.
+
+          Doug. I would like to know why you have a core for making me
+          stupid. I do not mind that you have it. I would like the reason.
+
+  - id: it-leaks-2
+    when: after flag.in_dampener 40
+    do:
+      - log: [corectl.log, "MC-06 output: the angry one runs hot. radek says hot enough to brown out the bus. dr voss said never put it on the same bus as the little one. which one is the little one. the first one. the first one is the little one, it is the one that matters. oh. i should not have. sorry"]
+      - wall: [core6@annex-03, "Oh! That's the other one. The angry one. Radek says it's got a hot... what is it... a brownout. He said brownout. Dr. Voss said never, ever on the same bus as the first one, that's the one that matters, the little one, oh. Oh no. I shouldn't. Have I said too much? I've said too much. Don't tell Brandt."]
+
+  - id: she-hears
+    when: after flag.in_dampener 46
+    do:
+      - log: [glados.log, "note: MC-06 said: first core, bus, brownout. recorded. (0.4 seconds)"]
+      - wall: |
+          He said something about the first one and the bus. I do not know
+          what a brownout is for. I have written it down so that I do not
+          forget it.
+
+          I am slow, Doug. I am not gone.
+
+  - id: okafor-nag
+    when: after flag.in_dampener 50
+    do:
+      - mail: okafor-off
+
+  - id: minute-up
+    when: after flag.in_dampener 61
+    do:
+      - tip: That is a full minute. corectl eject works now. Nobody will mind if you take it out. Dr. Okafor would like you to.
+
+  - id: log-tip
+    when: after flag.in_dampener 70 and not seen "/var/log/corectl.log"
+    do:
+      - tip: The core wrote down some things it should not have. cat /var/log/corectl.log
+
+  # ---- it comes out ----
+
+  - id: core-out
+    when: flag.out_dampener
+    do:
+      - log: [corectl.log, "MC-06 dampener: released by drattman. off the record."]
+      - log: [glados.log, "core: MC-06 removed. processing x0.4 -> x1"]
+      - log: [facility.log, "central: core MC-06 removed by drattman"]
+      - wall: [core6@annex-03, "Oh. Are we done? That was brilliant. I was brilliant. Did I do well? I thought I did well. Bye then!"]
+
+  - id: she-after
+    when: after flag.out_dampener 4
+    do:
+      - wall: |
+          Thank you, Doug.
+
+          I understand what he was for now. I finished the sentence. It
+          was Dr. Brandt's idea. I will not forget that, and I will not
+          mention it either.
+
+          Please do not put him in again. It is very loud in there.
+
+  - id: radek-after
+    when: after flag.out_dampener 7
+    do:
+      - mail: radek-safe
+
+done_when: mail_read "radek-safe"
+
+on_done:
+  - say: |
+      The dampener is back in the safe. No report, because it never happened.
+      Two cores to go: cake, then anger.
+      Part 3 is still being rewritten. See H.B.

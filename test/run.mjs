@@ -262,7 +262,25 @@ const l6 = type('mail');
 const n6 = (l6.match(/(\d+)\s+GLaDOS[^\n]*answers/) || [])[1];
 check('her answers mail', !!n6);
 type('mail ' + n6);
-check('chapter 6 done', state.chapter !== 'intelligence');
+check('chapter 6 done', state.chapter === 'dampener');
+
+// ---- chapter 7: dampener ----
+check('dampener on the list', type('corectl list').includes('dampener'));
+check('dampener mails', type('mail').includes('addendum'));
+check('dampener goes in out of order', type('corectl insert dampener').includes('hatch cradle'));
+let t7 = tick(30);
+check('it talks and she slows', t7.includes('Hello! Hi.') && t7.includes('someone in here'));
+t7 = tick(30);
+check('it leaks the bus', t7.includes('brownout') && world.fs.read('/var/log/corectl.log').includes('same bus'));
+tick(10);
+check('dampener ejects with no report', (() => { const o = type('corectl eject'); return o.includes('never on the ticket') || o.includes('no AS-114'); })());
+tick(10);
+const l7 = type('mail');
+const n7 = (l7.match(/(\d+)\s+Radek[^\n]*put it back/) || [])[1];
+check('radek safe mail', !!n7);
+type('mail ' + n7);
+check('chapter 7 done', state.chapter !== 'dampener');
+check('cake is still next', type('corectl status').includes('cake'));
 check('save round trips ch5', JSON.parse(JSON.stringify(world.save())).flags.report_curiosity === true);
 
 // idle nudge

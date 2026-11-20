@@ -42,7 +42,7 @@ How it ends for them is the same as in the games: the neurotoxin. Only one of th
 
 **6. Intelligence.** Third core, and a smart one. It was fitted back in cycle 4, before anyone knew what she'd do with it. She gets fast and efficient and starts fixing things nobody asked her to fix. Cron jobs show up that you didn't write. The first coworker mail goes unanswered.
 
-**7. The dampener.** She's gotten too good, so Radek brings up a prototype that isn't on the ticket: an intelligence dampening core built to make her slower. It's cheerful, it never stops talking, and it gets in everyone's way, her included. Okafor wants it off. Brandt wants it on. It isn't Wheatley yet, nobody has named it, but if you've played Portal 2 you know who it is.
+**7. The dampener.** She's gotten too good, so Brandt adds a core to the ticket that isn't on the list: a prototype Radek built to slow her down. It's cheerful, it never stops talking, and it gets in everyone's way, her included. Okafor wants it off, Brandt wants it on, and nobody files a report because officially it never happened. While it talks it lets slip that the angry core runs hot on the same power bus as the Morality core, which is where chapter 9 comes from. It isn't Wheatley yet, nobody has named it, but if you've played Portal 2 you know who it is.
 
 **8. The cake core.** Comic relief that you only later realise wasn't really a joke. She fixates on one subject and derails everything, and a hidden log trail shows what she was actually doing while you were distracted.
 

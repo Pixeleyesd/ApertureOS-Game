@@ -20,6 +20,7 @@ const CORES = {
   intelligence: { id: 'MC-03', kind: 'fast' },
   cake: { id: 'MC-04', kind: 'cafeteria request' },
   anger: { id: 'MC-05', kind: 'volatile' },
+  dampener: { id: 'MC-06', kind: 'prototype' }, // not in ORDER. chapter 7 sets flag.dampener_ok
 };
 
 const MIN_SECONDS = 60; // policy 11-C: no core comes out before a minute is up
@@ -39,6 +40,7 @@ function listing(s) {
     if (n === 'morality' && s.flags.morality_seated) st = 'primary socket (lab-seated)';
     return `  ${n.padEnd(14)}${CORES[n].id.padEnd(8)}${CORES[n].kind.padEnd(20)}${st}`;
   });
+  if (s.flags.dampener_ok) rows.push(`  ${'dampener'.padEnd(14)}${CORES.dampener.id.padEnd(8)}${CORES.dampener.kind.padEnd(20)}${s.flags.out_dampener ? 'done (off the record)' : s.core === 'dampener' ? 'in the cradle now' : 'added by H.B., off the ticket'}`);
   return ['  CORE          ID      TYPE                STATUS', ...rows].join('\n');
 }
 
@@ -74,13 +76,14 @@ const corectl = {
       const name = (args.filter((a) => !a.startsWith('-'))[1] || '').toLowerCase();
       if (!name) throw new ShellError('corectl: insert which core? For example:  corectl insert ' + (nextCore(s) || 'morality') + '\n(See them all with  corectl list)');
       if (!CORES[name]) throw new ShellError(`corectl: there is no core called "${name}". The five are: ${ORDER.join(', ')}.`);
+      if (name === 'dampener' && !s.flags.dampener_ok) throw new ShellError('corectl: dampener is not on the ticket. Nothing in the order calls for it.');
       if (s.core) throw new ShellError(`corectl: the cradle already has ${s.core} in it. Take it out first:  corectl eject`);
       if (name === 'morality' && s.flags.in_morality) throw new ShellError('corectl: morality is seated in the primary socket and stays there. The lab fitted it after the cycle 6 incident (see the index).');
       if (s.flags['out_' + name]) throw new ShellError(`corectl: ${name} has already been evaluated tonight. Once is what the ticket asks for.`);
       const next = nextCore(s);
-      if (name !== next) throw new ShellError(`corectl: out of order. The ticket says ${next} goes in next, not ${name}.\n(Policy 11-C. Cores go in one at a time, in the order on the ticket.)`);
+      if (name !== 'dampener' && name !== next) throw new ShellError(`corectl: out of order. The ticket says ${next} goes in next, not ${name}.\n(Policy 11-C. Cores go in one at a time, in the order on the ticket.)`);
       const owed = pendingReport(s);
-      if (owed) throw new ShellError(`corectl: file your report on ${owed} first. Policy 11-C wants one AS-114 per core.\n(Type  report new  to start it.)`);
+      if (owed && name !== 'dampener') throw new ShellError(`corectl: file your report on ${owed} first. Policy 11-C wants one AS-114 per core.\n(Type  report new  to start it.)`);
       s.core = name;
       setFlag(s, 'in_' + name, true);
       if (name === 'morality') return [
@@ -109,6 +112,12 @@ const corectl = {
         `Watch ${hhmm(s, 'in_' + name)} to ${hhmm(s, 'out_' + name)}.`,
         '',
         'Policy 11-C wants an AS-114 for every evaluation. Start yours with:  report new',
+      ].join('\n');
+      if (name === 'dampener') return [
+        'Core MC-06 (dampener) released. Latch open.',
+        `Time in ${hhmm(s, 'in_' + name)}, time out ${hhmm(s, 'out_' + name)}.`,
+        '',
+        'It was never on the ticket, so there is no AS-114 for it. The next core is still ' + (nextCore(s) || 'none') + '.',
       ].join('\n');
       return [
         `Core ${CORES[name].id} (${name}) released. Latch open.`,
