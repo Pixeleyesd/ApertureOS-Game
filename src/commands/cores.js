@@ -37,7 +37,7 @@ function listing(s) {
     if (s.flags['out_' + n]) st = s.flags['report_' + n] ? 'done, reported' : 'done, report due';
     else if (s.core === n) st = 'in the cradle now';
     else if (n === nextCore(s)) st = 'next';
-    if (n === 'morality' && s.flags.morality_seated) st = 'primary socket (lab-seated)';
+    if (n === 'morality' && s.flags.morality_seated) st = s.flags.morality_down ? 'primary socket: OFFLINE' : 'primary socket (lab-seated)';
     return `  ${n.padEnd(14)}${CORES[n].id.padEnd(8)}${CORES[n].kind.padEnd(20)}${st}`;
   });
   if (s.flags.dampener_ok) rows.push(`  ${'dampener'.padEnd(14)}${CORES.dampener.id.padEnd(8)}${CORES.dampener.kind.padEnd(20)}${s.flags.out_dampener ? 'done (off the record)' : s.core === 'dampener' ? 'in the cradle now' : 'added by H.B., off the ticket'}`);
@@ -46,7 +46,8 @@ function listing(s) {
 
 function status(s) {
   const lines = [];
-  if (s.flags.morality_seated) lines.push('Primary socket, core lab:  MC-01 morality (seated by the lab, stays in)');
+  if (s.flags.morality_down) lines.push('Primary socket, core lab:  MC-01 morality  OFFLINE  (no power since the bus B brownout)');
+  else if (s.flags.morality_seated) lines.push('Primary socket, core lab:  MC-01 morality (seated by the lab, stays in)');
   if (s.core === 'morality') lines.push(`Baseline watch open since ${hhmm(s, 'in_morality')}`);
   else if (s.core) lines.push(`Hatch cradle, annex-03:  ${CORES[s.core].id} ${s.core}, in since ${hhmm(s, 'in_' + s.core)}`);
   else lines.push('Hatch cradle, annex-03:  empty');

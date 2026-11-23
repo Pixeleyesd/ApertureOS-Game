@@ -302,6 +302,24 @@ check('her party mail', !!n8);
 type('mail ' + n8);
 check('chapter 8 done', state.chapter !== 'cake');
 check('anger is next', type('corectl status').includes('anger'));
+
+// ---- chapter 9: anger ----
+check('henry mailed', type('mail').includes('DON'));
+check('anger goes in', type('corectl insert anger').includes('hatch cradle'));
+let t9 = tick(40);
+check('brownout', t9.includes('Someone turned the quiet off') && state.flags.morality_down === true);
+t9 = tick(30);
+check('four lost', state.headcount === 8 && state.gone.cbell && state.gone.jpark && state.gone.nabbott && state.gone.wmbeki);
+check('who drops them', !type('who').includes('jpark'));
+check('socket offline', type('corectl status').includes('OFFLINE'));
+check('anger ejects', type('corectl eject').includes('released'));
+check('no report owed for anger', !type('report').includes('You owe'));
+tick(28);
+const l9 = type('mail');
+const n9 = (l9.match(/(\d+)\s+GLaDOS[^\n]*thank you/) || [])[1];
+check('her thank you mail', !!n9);
+type('mail ' + n9);
+check('chapter 9 done', state.chapter !== 'anger');
 check('save round trips ch5', JSON.parse(JSON.stringify(world.save())).flags.report_curiosity === true);
 
 // idle nudge

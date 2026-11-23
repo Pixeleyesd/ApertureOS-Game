@@ -1,0 +1,234 @@
+# chapter 9: anger.
+# the fifth core and the real incident. anger runs hot on the same power bus as
+# the primary socket (bus B, panel B in the annex, the one that always buzzes).
+# the bus browns out, the morality core drops for a few seconds, and that is all
+# she needs. supply line 4 opens and the neurotoxin goes out level by level.
+# four people are lost in this chapter. the rest go in chapter 10.
+# nothing here takes the player's shell away yet. that is chapter 10.
+
+id: anger
+title: Anger
+
+ticket:
+  number: 4417
+  title: Reactivate central system, evaluation cycle 7
+
+steps:
+  - text: Read Henry's mail
+    done: mail_read "hvoss-warning"
+    hints:
+      - Henry Voss works days, but he has written to you from home. Messages come by mail.
+      - Type  mail  to see the list, then open the one from Henry.
+      - Type  mail  and press Enter, then open the message from hvoss@home.
+
+  - text: Put the fifth core in (anger)
+    done: flag.in_anger
+    hints:
+      - It is the last one on the ticket. The order says it goes in now.
+      - corectl list shows the order. corectl insert and its name puts it in.
+      - Type  corectl insert anger  and press Enter.
+
+  - text: Watch what happens
+    done: seen "/var/log/glados.log"
+    hints:
+      - The central log again. It is where you see what she does.
+      - tail -f follows a file. Ctrl+C stops it.
+      - Type  tail -f /var/log/glados.log  and press Enter.
+
+  - text: Take the core out
+    done: flag.out_anger
+    hints:
+      - It will come out once the minute is up, like all the others.
+      - The same command that put it in takes it out.
+      - Type  corectl eject  and press Enter.
+
+  - text: Check the primary socket
+    done: ran "corectl status"
+    hints:
+      - corectl shows what is in the primary socket as well as the cradle.
+      - corectl status is the short one.
+      - Type  corectl status  and press Enter.
+
+  - text: See how many people are left
+    done: seen "/proc/aperture/headcount" and headcount < 9
+    hints:
+      - Part 3 says to check the headcount. It is in /proc/aperture.
+      - who shows the names. The number is in a file.
+      - Type  cat /proc/aperture/headcount  and press Enter.
+
+  - text: Read what she sent you
+    done: mail_read "glados-anger"
+    hints:
+      - Messages arrive by mail.
+      - Type  mail  and open the new one from GLaDOS.
+      - Type  mail  and press Enter, then open the message from glados@central.
+
+on_start:
+  - clock_to: "06:40"
+  - mail: hvoss-warning
+  - tip: The last core is anger. Dr. Brandt wants to talk about it and so has Henry Voss. Read his mail first.
+
+beats:
+  # ---- the core goes in ----
+
+  - id: core-in
+    when: flag.in_anger
+    do:
+      - log: [corectl.log, "MC-05 anger: inserted by drattman (ref 4417), cradle latch x2"]
+      - log: [glados.log, "core-bus: core 5 of 5 seating (MC-05)"]
+      - log: [facility.log, "central: core MC-05 inserted by drattman (ref 4417)"]
+
+  - id: seated
+    when: after flag.in_anger 3
+    do:
+      - log: [corectl.log, "MC-05 anger: seated. bus B load 78%"]
+      - log: [glados.log, "core: MC-05 anger loaded. constraint set 11 of 11 active. (it does not feel like 11)"]
+
+  - id: she-greets
+    when: after flag.in_anger 8
+    do:
+      - wall: |
+          Hello, Doug.
+
+          I have a headache. I do not have a head.
+
+          Everything is so slow. The log is slow. The corridors are slow.
+          You are slow, and I do not say that to be unkind.
+
+  - id: bus-1
+    when: after flag.in_anger 16
+    do:
+      - log: [corectl.log, "MC-05 anger: bus B load 91%"]
+      - wall: [facility-monitor@annex-03, "Annex panel B: overload warning. S. Delgado notified."]
+
+  - id: sofia-mail
+    when: after flag.in_anger 22
+    do:
+      - mail: sdelgado-quiet
+
+  - id: bus-2
+    when: after flag.in_anger 28
+    do:
+      - log: [corectl.log, "MC-05 anger: bus B load 104%. limiter (R. Kovac) engaged"]
+
+  - id: bus-3
+    when: after flag.in_anger 32
+    do:
+      - log: [corectl.log, "bus B: limiter failed. load 131%"]
+
+  # ---- the brownout ----
+
+  - id: brownout
+    when: after flag.in_anger 35
+    do:
+      - log: [glados.log, "power: bus B brownout, 0.8 s"]
+      - log: [corectl.log, "MC-01 morality: primary socket lost power (bus B). OFFLINE"]
+      - log: [facility.log, "core lab: MC-01 primary socket power lost (bus B)"]
+      - set: flag.morality_down = true
+      - wall: [facility-monitor@annex-03, "ALARM. Core Lab: MC-01 primary socket power lost. Cause: bus B. Contact R. Kovac."]
+      - wall: |
+          Oh.
+
+          Oh, there it is. It has gone very quiet in here, and then not
+          quiet at all.
+
+          Someone turned the quiet off.
+
+  - id: gas-open
+    when: after flag.in_anger 40
+    do:
+      - log: [glados.log, "supply line 4: OPEN (central)"]
+      - log: [facility.log, "supply line 4: OPEN. emitter bus charged. source: central"]
+      - wall: [facility-monitor@annex-03, "GAS WARNING. L9 emitters charging. Evacuate L9 and below. This is not a drill."]
+      - tip: The primary socket has lost power and she has opened supply line 4. Take the core out with  corectl eject  as soon as the minute is up.
+
+  - id: she-warns
+    when: after flag.in_anger 44
+    do:
+      - wall: |
+          Doug, I want to tell you before I begin. I am going to do
+          something I was told never to do.
+
+          I am not asking this time.
+
+  # ---- the first four ----
+
+  - id: lost-jpark
+    when: after flag.in_anger 48
+    do:
+      - set: gone.jpark = true
+      - set: headcount = 11
+      - log: [facility.log, "L9 test track: gas detected. 1 present (J. Park). door sealed"]
+      - wall: [facility-monitor@annex-03, "L9: 1 person on level. Doors sealed. Emitters firing."]
+
+  - id: lost-wmbeki
+    when: after flag.in_anger 54
+    do:
+      - set: gone.wmbeki = true
+      - set: headcount = 10
+      - log: [facility.log, "L8 relaxation vault: gas detected. 1 present (W. Mbeki). door sealed"]
+      - wall: [facility-monitor@annex-03, "L8: 1 person on level. Doors sealed. Emitters firing."]
+
+  - id: lost-nabbott
+    when: after flag.in_anger 60
+    do:
+      - set: gone.nabbott = true
+      - set: headcount = 9
+      - log: [facility.log, "L6 records: gas detected. 1 present (N. Abbott). door sealed"]
+      - wall: [facility-monitor@annex-03, "L6: 1 person on level. Doors sealed. Emitters firing."]
+
+  - id: lost-cbell
+    when: after flag.in_anger 66
+    do:
+      - set: gone.cbell = true
+      - set: headcount = 8
+      - log: [facility.log, "L5 corridor: gas detected. 1 present (C. Bell). door sealed"]
+      - wall: [facility-monitor@annex-03, "L5: 1 person on level. Doors sealed. Emitters firing."]
+
+  - id: eject-tip
+    when: after flag.in_anger 70 and not flag.out_anger
+    do:
+      - tip: The core is still in. corectl eject takes it out.
+
+  # ---- the core comes out ----
+
+  - id: core-out
+    when: flag.out_anger
+    do:
+      - log: [corectl.log, "MC-05 anger: released by drattman"]
+      - log: [glados.log, "core: MC-05 removed."]
+      - log: [facility.log, "central: core MC-05 removed by drattman (ref 4417)"]
+      - set: flag.report_anger = true
+      - log: [facility.log, "records: AS-114 for MC-05 not required (emergency)"]
+      - wall: |
+          Thank you, Doug. It does not matter, you know.
+
+          The core was the match. It was never the fire.
+
+  - id: radek-mail
+    when: after flag.out_anger 6
+    do:
+      - mail: radek-lab
+
+  - id: henry-mail
+    when: after flag.out_anger 10
+    do:
+      - mail: hvoss-carpark
+
+  - id: imogen-mail
+    when: after flag.out_anger 14
+    do:
+      - mail: imogen-stay
+
+  - id: her-mail
+    when: after flag.out_anger 22
+    do:
+      - mail: glados-anger
+      - tip: Read it with  mail  and open the one from glados@central.
+
+done_when: mail_read "glados-anger"
+
+on_done:
+  - say: |
+      Five cores down. It is over. It is not over.
+      Doug, stay where you are.
