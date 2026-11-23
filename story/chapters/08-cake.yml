@@ -1,0 +1,403 @@
+# chapter 8: the cake core.
+# comic relief, until it isn't. Tobias asked for this core for the cafeteria and
+# nobody had the heart to say no. she fixates on cake and fills the screen with
+# recipes and questions, and while the player is busy being charmed, she is
+# also placing orders. the cafeteria order log is the hidden trail: the first
+# lines are flour and eggs, the later ones are not. the orders stay queued after
+# the core comes out because central placed them, not the core.
+
+id: cake
+title: The cake core
+
+ticket:
+  number: 4417
+  title: Reactivate central system, evaluation cycle 7
+
+steps:
+  - text: Read Tobias's mail
+    done: mail_read "twren-cake"
+    hints:
+      - Tobias in the cafeteria has sent you something about the next core. Messages come by mail.
+      - Type  mail  to see the list, then open the one from Tobias.
+      - Type  mail  and press Enter, then open the message from twren@cafeteria.
+
+  - text: Put the fourth core in (cake)
+    done: flag.in_cake
+    hints:
+      - The ticket has the order. Three are done and the dampener does not count, so cake is next.
+      - corectl list shows the order. corectl insert and its name puts it in.
+      - Type  corectl insert cake  and press Enter.
+
+  - text: Watch what she does with it
+    done: seen "/var/log/glados.log"
+    hints:
+      - The central log again. It is the place to see what she does while she talks.
+      - tail -f follows a file. Ctrl+C stops it.
+      - Type  tail -f /var/log/glados.log  and press Enter, then give it a minute.
+
+  - text: Look at the cafeteria orders she placed
+    done: seen "/var/log/cafeteria-orders.log"
+    hints:
+      - Tobias said she was ordering things. His orders are kept in a log in /var/log.
+      - The log has cafeteria in its name. ls /var/log shows it.
+      - Type  cat /var/log/cafeteria-orders.log  and press Enter.
+
+  - text: Take the core out
+    done: flag.out_cake
+    hints:
+      - It comes out once the minute is up, same as the others.
+      - The same command that put it in takes it out.
+      - Type  corectl eject  and press Enter.
+
+  - text: Write your AS-114 (report new, then add your lines)
+    done: wrote "~/reports/AS-114-cake.txt"
+    hints:
+      - report new makes the form. You add to it with echo and >>, like last time.
+      - Say what she talked about, and what she ordered. Plain words.
+      - Type  report new  then  echo "OBSERVED she talked about cake and ordered things for it." >> ~/reports/AS-114-cake.txt  and press Enter.
+
+  - text: File the report
+    done: flag.report_cake
+    hints:
+      - Same command as last time.
+      - report file sends it.
+      - Type  report file  and press Enter.
+
+  - text: Read what she sent you
+    done: mail_read "glados-cake"
+    hints:
+      - Messages arrive by mail.
+      - Type  mail  and open the new one from GLaDOS.
+      - Type  mail  and press Enter, then open the message from glados@central.
+
+on_start:
+  - clock_to: "05:10"
+  - mail: twren-cake
+  - tip: The fourth core is cake. It was Tobias's idea and Dr. Okafor will not talk about it. Read his mail first.
+
+beats:
+  # ---- the core goes in ----
+
+  - id: core-in
+    when: flag.in_cake
+    do:
+      - log: [corectl.log, "MC-04 cake: inserted by drattman (ref 4417), cradle latch x2"]
+      - log: [facility.log, "central: core MC-04 inserted by drattman (ref 4417)"]
+
+  - id: seated
+    when: after flag.in_cake 3
+    do:
+      - log: [corectl.log, "MC-04 cake: seated, checksum ok, 1 recipe on file"]
+
+  # ---- the recipe, and the first orders ----
+
+  - id: order-1
+    when: after flag.in_cake 12
+    do:
+      - log: [cafeteria-orders.log, "order 0419: flour 40 kg, sugar 22 kg, eggs 1603. deliver: annex kitchen. status: accepted"]
+
+  - id: orders-monitor
+    when: after flag.in_cake 18
+    do:
+      - log: [cafeteria-orders.log, "order 0420: butter 12 kg, vanilla 40 ml, cocoa 6 kg. status: accepted"]
+      - wall: [facility-monitor@annex-03, "Cafeteria: 2 large orders placed by central (account 100). Please check stock with T. Wren."]
+
+  - id: trail-1
+    when: after flag.in_cake 30
+    do:
+      - log: [cafeteria-orders.log, "order 0421: candles 1, plates 1603, forks 1603, knives 0 (central was very clear)"]
+      - log: [cafeteria-orders.log, "order 0422: ingredient, supply line 4, 0.2 L, for the icing. approval: pending (H. Voss, on call)"]
+
+  - id: tobias-mail
+    when: after flag.in_cake 36
+    do:
+      - mail: twren-plates
+
+  # the cake core's rambling. the moment the core goes in it starts reading out
+  # one line at a time into the central log, every 2 seconds, and says nothing
+  # else there. one beat per line: to change a line, edit its text. to change
+  # the speed, change the numbers after "flag.in_cake".
+  - id: ramble-1
+    when: after flag.in_cake 1
+    do:
+      - log: [glados.log, "One 18.25 ounce package chocolate cake mix"]
+
+  - id: ramble-2
+    when: after flag.in_cake 2
+    do:
+      - log: [glados.log, "One can prepared coconut pecan frosting"]
+
+  - id: ramble-3
+    when: after flag.in_cake 3
+    do:
+      - log: [glados.log, "Three slash four cup vegetable oil"]
+
+  - id: ramble-4
+    when: after flag.in_cake 4
+    do:
+      - log: [glados.log, "Four large eggs. One cup semi-sweet chocolate chips"]
+
+  - id: ramble-5
+    when: after flag.in_cake 5
+    do:
+      - log: [glados.log, "Three slash four cup butter or margarine"]
+
+  - id: ramble-6
+    when: after flag.in_cake 6
+    do:
+      - log: [glados.log, "One and two third cups granulated sugar"]
+
+  - id: ramble-7
+    when: after flag.in_cake 7
+    do:
+      - log: [glados.log, "Two cups all-purpose flower"]
+
+  - id: ramble-8
+    when: after flag.in_cake 8
+    do:
+      - log: [glados.log, "Don't forget garnishes such as"]
+
+  - id: ramble-9
+    when: after flag.in_cake 9
+    do:
+      - log: [glados.log, "Fish-shaped crackers"]
+
+  - id: ramble-10
+    when: after flag.in_cake 10
+    do:
+      - log: [glados.log, "Fish-shaped candies"]
+
+  - id: ramble-11
+    when: after flag.in_cake 11
+    do:
+      - log: [glados.log, "Fish-shaped solid waste"]
+
+  - id: ramble-12
+    when: after flag.in_cake 12
+    do:
+      - log: [glados.log, "Fish-shaped dirt"]
+
+  - id: ramble-13
+    when: after flag.in_cake 13
+    do:
+      - log: [glados.log, "Fish-shaped ethyl benzene"]
+
+  - id: ramble-14
+    when: after flag.in_cake 14
+    do:
+      - log: [glados.log, "Pull and peel licorice"]
+
+  - id: ramble-15
+    when: after flag.in_cake 15
+    do:
+      - log: [glados.log, "Fish-shaped volatile organic compounds and sediment-shaped sediment"]
+
+  - id: ramble-16
+    when: after flag.in_cake 16
+    do:
+      - log: [glados.log, "Candy coated peanut butter pieces. Shaped like fish"]
+
+  - id: ramble-17
+    when: after flag.in_cake 17
+    do:
+      - log: [glados.log, "One cup lemon juice"]
+
+  - id: ramble-18
+    when: after flag.in_cake 18
+    do:
+      - log: [glados.log, "Alpha resins"]
+
+  - id: ramble-19
+    when: after flag.in_cake 19
+    do:
+      - log: [glados.log, "Unsaturated polyester resin"]
+
+  - id: ramble-20
+    when: after flag.in_cake 20
+    do:
+      - log: [glados.log, "Fiberglass surface resins"]
+
+  - id: ramble-21
+    when: after flag.in_cake 21
+    do:
+      - log: [glados.log, "And volatile malted milk impoundments"]
+
+  - id: ramble-22
+    when: after flag.in_cake 22
+    do:
+      - log: [glados.log, "Nine large egg yolks"]
+
+  - id: ramble-23
+    when: after flag.in_cake 23
+    do:
+      - log: [glados.log, "Twelve medium geosynthetic membranes"]
+
+  - id: ramble-24
+    when: after flag.in_cake 24
+    do:
+      - log: [glados.log, "One cup granulated sugar"]
+
+  - id: ramble-25
+    when: after flag.in_cake 25
+    do:
+      - log: [glados.log, "An entry called 'How To Kill Someone With Your Bare Hands'"]
+
+  - id: ramble-26
+    when: after flag.in_cake 26
+    do:
+      - log: [glados.log, "Two cups rhubarb, sliced"]
+
+  - id: ramble-27
+    when: after flag.in_cake 27
+    do:
+      - log: [glados.log, "Two slash three cup granulated rhubarb"]
+
+  - id: ramble-28
+    when: after flag.in_cake 28
+    do:
+      - log: [glados.log, "One tablespoon all-purpose rhubarb"]
+
+  - id: ramble-29
+    when: after flag.in_cake 30
+    do:
+      - log: [glados.log, "One teaspoon grated orange rhubarb"]
+
+  - id: ramble-30
+    when: after flag.in_cake 31
+    do:
+      - log: [glados.log, "Three tablespoons rhubarb, on fire"]
+
+  - id: ramble-31
+    when: after flag.in_cake 33
+    do:
+      - log: [glados.log, "One large rhubarb"]
+
+  - id: ramble-32
+    when: after flag.in_cake 34
+    do:
+      - log: [glados.log, "One cross borehole electromagnetic imaging rhubarb"]
+
+  - id: ramble-33
+    when: after flag.in_cake 35
+    do:
+      - log: [glados.log, "Two tablespoons rhubarb juice"]
+
+  - id: ramble-34
+    when: after flag.in_cake 37
+    do:
+      - log: [glados.log, "Adjustable aluminum head positioner"]
+
+  - id: ramble-35
+    when: after flag.in_cake 38
+    do:
+      - log: [glados.log, "Slaughter electric needle injector"]
+
+  - id: ramble-36
+    when: after flag.in_cake 40
+    do:
+      - log: [glados.log, "Cordless electric needle injector"]
+
+  - id: ramble-37
+    when: after flag.in_cake 41
+    do:
+      - log: [glados.log, "Injector needle driver"]
+
+  - id: ramble-38
+    when: after flag.in_cake 43
+    do:
+      - log: [glados.log, "Injector needle gun"]
+
+  - id: ramble-39
+    when: after flag.in_cake 44
+    do:
+      - log: [glados.log, "Cranial caps"]
+
+  - id: ramble-40
+    when: after flag.in_cake 46
+    do:
+      - log: [glados.log, "And it contains proven preservatives, deep penetration agents, and gas and odor control chemicals"]
+
+  - id: ramble-41
+    when: after flag.in_cake 47
+    do:
+      - log: [glados.log, "That will deodorize and preserve putrid tissue"]
+
+  - id: trail-2
+    when: after flag.in_cake 48
+    do:
+      - log: [cafeteria-orders.log, "order 0423: guest list attached (1603 subjects + 12 staff). serve: end of test. portions: 1603."]
+      - log: [cafeteria-orders.log, "order 0423 note: they will not all be present. cut accordingly."]
+
+  - id: trail-3
+    when: after flag.in_cake 50
+    do:
+      - log: [cafeteria-orders.log, "order 0424: subject 1498 has requested [BLACK FOREST CAKE]. status: accepted"]
+      - log: [cafeteria-orders.log, "order 0424 note: do not tell 1498. it is a surprise."]
+
+  - id: log-tip
+    when: after flag.in_cake 40 and not seen "/var/log/cafeteria-orders.log"
+    do:
+      - tip: She keeps placing orders while she talks. They are written down in  /var/log/cafeteria-orders.log
+
+  - id: minute-up
+    when: after flag.in_cake 61
+    do:
+      - tip: That is a full minute. corectl eject works now. You can read the order log first if you have not.
+
+  - id: stay-nudge
+    when: after flag.in_cake 120 and not flag.out_cake
+    do:
+      - tip: When you have seen enough, take the core out with  corectl eject
+
+  # ---- the core comes out ----
+
+  - id: core-out
+    when: flag.out_cake
+    do:
+      - log: [corectl.log, "MC-04 cake: released by drattman"]
+      - log: [facility.log, "central: core MC-04 removed by drattman (ref 4417)"]
+      - log: [cafeteria-orders.log, "orders 0419 to 0424: status unchanged. (placed by central, not by core)"]
+      - wall: |
+          Oh.
+
+          Thank you, Doug. I am still thinking about the rhubarb. I think I
+          will always be thinking about the rhubarb now.
+
+          The orders are still going. I did not need the core to place
+          them. It was only a nice way to be asked.
+
+  - id: report-tip
+    when: after flag.out_cake 5 and not flag.draft_cake
+    do:
+      - tip: report new starts your AS-114. The orders she placed in the cafeteria log are probably worth a line.
+
+  - id: filed
+    when: flag.report_cake
+    do:
+      - log: [facility.log, "records: AS-114 received from drattman (cake, ref 4417)"]
+
+  - id: brandt-answer
+    when: after flag.report_cake 4
+    do:
+      - mail: brandt-report-cake
+
+  - id: she-read-queue
+    when: after flag.report_cake 6 and flag.rep_cake_queue
+    do:
+      - wall: |
+          You wrote about the guest list. It is a very good list. Thank
+          you for noticing it.
+
+  - id: her-mail
+    when: after flag.report_cake 10
+    do:
+      - mail: glados-cake
+      - tip: Read it with  mail  and open the one from glados@central.
+
+done_when: mail_read "glados-cake"
+
+on_done:
+  - say: |
+      Four cores down. One to go.
+      The last one on the ticket is anger. Brandt wants to talk about it first.
+      Part 3 is still being rewritten. See H.B.

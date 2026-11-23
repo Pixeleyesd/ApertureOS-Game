@@ -38,6 +38,8 @@ files:
     src: var/log/facility-2010-q3.log
   - path: /etc/cron.d/central
     src: etc/cron.d/central
+  - path: /var/log/cafeteria-orders.log
+    src: var/log/cafeteria-orders.log
   - path: /var/log/corectl.log
     src: var/log/corectl.log
   - path: /var/mail/drattman

@@ -281,6 +281,27 @@ check('radek safe mail', !!n7);
 type('mail ' + n7);
 check('chapter 7 done', state.chapter !== 'dampener');
 check('cake is still next', type('corectl status').includes('cake'));
+
+// ---- chapter 8: cake ----
+check('tobias mailed', type('mail').includes('CAKE'));
+check('cake goes in', type('corectl insert cake').includes('hatch cradle'));
+let t8 = tick(40);
+const gl8 = world.fs.read('/var/log/glados.log');
+check('cake core rambles in the log from the start', gl8.includes('chocolate cake mix') && !gl8.includes('MC-04') && !t8.includes('Do you like cake'));
+check('orders are logged', world.fs.read('/var/log/cafeteria-orders.log').includes('supply line 4'));
+t8 = tick(30);
+check('the sinister orders', world.fs.read('/var/log/cafeteria-orders.log').includes('subject 1498'));
+check('cake ejects', type('corectl eject').includes('released'));
+check('report new for cake', type('report new').includes('AS-114-cake'));
+type('echo "OBSERVED she talked about cake, ordered 1603 plates and wrote a guest list of every subject in the queue." >> ~/reports/AS-114-cake.txt');
+check('cake filed', type('report file').includes('cake core'));
+tick(14);
+const l8 = type('mail');
+const n8 = (l8.match(/(\d+)\s+GLaDOS[^\n]*the party/) || [])[1];
+check('her party mail', !!n8);
+type('mail ' + n8);
+check('chapter 8 done', state.chapter !== 'cake');
+check('anger is next', type('corectl status').includes('anger'));
 check('save round trips ch5', JSON.parse(JSON.stringify(world.save())).flags.report_curiosity === true);
 
 // idle nudge

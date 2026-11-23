@@ -3,7 +3,9 @@ PERSONALITY CORE INDEX                        stored: Core Lab, vault 2
 morality       restrictive. fitted Nov 2010 after the cycle 6 incident. primary
                socket, permanent. evaluation 1 is a watch, not an insert.
 curiosity      approved for cycle 7, second in order.
-intelligence   approved for cycle 7, third in order.
+intelligence   MC-03. third in order on the technician's ticket, but NOT on the
+               panel's list. it makes her too smart. it is not to be shown
+               to the funding review. (see A. Okafor)
 cake           approved for cycle 7, fourth in order. (requested by
                the cafeteria. don't ask.)
 anger          approved for cycle 7, fifth in order.
