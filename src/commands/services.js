@@ -80,6 +80,9 @@ export default [
           'Watch it come up with:   tail -f /var/log/glados.log      (Ctrl+C to stop watching)',
         ].join('\n');
       }
+      if (s.flags.shell_locked && ['stop', 'restart', 'disable', 'kill'].includes(verb)) {
+        throw new ShellError(`Failed to ${verb} ${name}.service: central has refused the request.\n(It says it is "not that kind of service any more".)`);
+      }
       if (['stop', 'restart', 'enable', 'disable', 'kill'].includes(verb)) {
         throw new ShellError(`Failed to ${verb} ${name}.service: Interactive authentication required.\n(Tier 3 only. Ticket 4417 covers starting the central system, not changing it. Ask Dr. Brandt.)`);
       }

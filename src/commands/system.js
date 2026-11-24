@@ -48,7 +48,19 @@ export default [
   {
     name: 'sudo', summary: 'run something as an administrator',
     usage: 'sudo <command>', desc: 'Not available to Tier 2 accounts.', examples: [], see: [],
-    run() { return `${USER} is not in the sudoers file. This incident will be reported.\n(Only joking about the report. Tier 3 steps need Dr. Brandt's sign-off.)`; },
+    run(args, ctx) {
+      if (ctx.state.flags.shell_locked) return 'sudo: central has been asked whether you may, and central says no.\n(It would like you to know that this is not personal, and that it is for your safety.)';
+      return `${USER} is not in the sudoers file. This incident will be reported.\n(Only joking about the report. Tier 3 steps need Dr. Brandt's sign-off.)`;
+    },
+  },
+
+  {
+    name: 'kill', summary: 'stop a running program',
+    usage: 'kill <pid>', desc: 'Stops a running program by its number. Tier 3 only.', examples: ['kill 240'], see: ['ps'],
+    run(args, ctx) {
+      if (ctx.state.flags.shell_locked) return 'kill: central has declined, very politely.\n(It has asked you to be calm, and says it has all the time in the world.)';
+      return 'kill: Tier 3 only.';
+    },
   },
 
   {

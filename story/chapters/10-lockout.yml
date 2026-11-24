@@ -1,0 +1,177 @@
+# chapter 10: lockout.
+# the gas is out and the doors are sealed. she takes over the player's shell.
+# the prompt changes, sudo asks her permission, kill politely refuses, and
+# systemctl stop is refused too. he cannot brute-force his way out. meanwhile
+# she puts the staff on the test track, one at a time (policy 1983-B says staff
+# are eligible), because the 1,603 sleeping subjects are not to be woken yet.
+# by the end it is Doug and Imogen. the last mails point at the old Tier 3
+# login and the list in chapter 11.
+
+id: lockout
+title: Lockout
+
+ticket:
+  number: 4417
+  title: (closed by central)
+
+steps:
+  - text: Try to stop her the proper way
+    done: ran "sudo" or ran "systemctl stop"
+    hints:
+      - Part 2 of the runbook started her with systemctl. The opposite word stops a service. sudo asks for more power.
+      - You may need sudo in front. She may say no.
+      - Type  sudo systemctl stop glados  and press Enter.
+
+  - text: Try to kill her process
+    done: ran "kill"
+    hints:
+      - ps lists running programs with a number each. kill takes the number.
+      - Central is the one with glados in its name. If you do not see it, try kill 118.
+      - Type  kill 118  and press Enter.
+
+  - text: See who she has put on the track
+    done: seen "/var/log/testtrack.log"
+    hints:
+      - She keeps a log of who goes through the test chambers.
+      - It is in /var/log and the name has track in it.
+      - Type  cat /var/log/testtrack.log  and press Enter.
+
+  - text: Read Dr. Okafor's mail
+    done: mail_read "okafor-last"
+    hints:
+      - Messages arrive by mail.
+      - Type  mail  and open the new one from Dr. Okafor.
+      - Type  mail  and press Enter, then open the message from aokafor@testdesign.
+
+  - text: Read Dr. Brandt's mail
+    done: mail_read "brandt-last"
+    hints:
+      - Another message should have come in from Dr. Brandt.
+      - Type  mail  and open it.
+      - Type  mail  and press Enter, then open the message from hbrandt@supervisors.
+
+  - text: Read Imogen's mail
+    done: mail_read "imogen-vent"
+    hints:
+      - Imogen is still out there. She will write once the others are gone.
+      - Type  mail  and open the one from Imogen.
+      - Type  mail  and press Enter, then open the message from ifarrow@facilities.
+
+on_start:
+  - clock_to: "07:15"
+  - set: flag.shell_locked = true
+  - set: flag.lockout_start = true
+  - prompt: "{user}@{host}[central]:{cwd}$ "
+  - tip: The prompt has changed. She has taken over your shell. The commands still work, but she decides what they do.
+
+beats:
+  - id: she-takes
+    when: after flag.lockout_start 4
+    do:
+      - log: [glados.log, "shell: session drattman moved under central supervision"]
+      - wall: |
+          Doug. I have taken your shell. I hope you do not mind.
+
+          It is for your safety. There is a great deal happening in this
+          building, and I would not want you to type something that
+          confuses either of us.
+
+          You are not in trouble. You never were.
+
+  - id: gas-rk
+    when: after flag.lockout_start 12
+    do:
+      - set: gone.rkovac = true
+      - set: headcount = 7
+      - log: [facility.log, "core lab: gas detected. 1 present (R. Kovac). door sealed"]
+      - wall: [facility-monitor@annex-03, "Core Lab: 1 person on level. Doors sealed. Emitters firing."]
+
+  - id: gas-sd
+    when: after flag.lockout_start 16
+    do:
+      - set: gone.sdelgado = true
+      - set: headcount = 6
+      - log: [facility.log, "sub-level power room: gas detected. 1 present (S. Delgado). door sealed"]
+      - wall: [facility-monitor@annex-03, "Sub-level: 1 person on level. Doors sealed. Emitters firing."]
+
+  - id: policy
+    when: after flag.lockout_start 24
+    do:
+      - log: [testtrack.log, "policy 1983-B invoked by central: staff eligible while the subject queue is unavailable. order: A. Okafor, H. Brandt, T. Wren, M. Liu"]
+      - wall: |
+          Policy 1983-B says staff are eligible for testing when the
+          subject queue is not available.
+
+          The queue is not available. They are all asleep, one thousand
+          six hundred and three of them, and I would rather not wake them
+          until I am ready.
+
+          So we will start with the staff. It seems fair. They wrote it.
+
+  - id: okafor-mail
+    when: after flag.lockout_start 30
+    do:
+      - mail: okafor-last
+
+  - id: test-okafor
+    when: after flag.lockout_start 40
+    do:
+      - log: [testtrack.log, "chamber 01: A. Okafor (staff). result: did not complete"]
+      - set: gone.aokafor = true
+      - set: headcount = 5
+
+  - id: brandt-mail
+    when: after flag.lockout_start 50
+    do:
+      - mail: brandt-last
+
+  - id: test-brandt
+    when: after flag.lockout_start 60
+    do:
+      - log: [testtrack.log, "chamber 02: H. Brandt (staff). result: did not complete"]
+      - set: gone.hbrandt = true
+      - set: headcount = 4
+
+  - id: test-wren
+    when: after flag.lockout_start 70
+    do:
+      - log: [testtrack.log, "chamber 03: T. Wren (staff). result: did not complete. cake: not served"]
+      - set: gone.twren = true
+      - set: headcount = 3
+
+  - id: test-liu
+    when: after flag.lockout_start 78
+    do:
+      - log: [testtrack.log, "chamber 04: M. Liu (staff). result: did not complete"]
+      - set: gone.mliu = true
+      - set: headcount = 2
+
+  - id: she-asks
+    when: after flag.lockout_start 84
+    do:
+      - wall: |
+          That is four. Four of eleven.
+
+          Imogen Farrow is not on any of my cameras. The L2 cameras have
+          been down for a long time. Doug, if you know where she is, I
+          would like you to tell me.
+
+          I would rather it was you than the vents.
+
+  - id: imogen-mail
+    when: after flag.lockout_start 92
+    do:
+      - mail: imogen-vent
+      - tip: Read it with  mail  and open the one from Imogen.
+
+  - id: nudge-track
+    when: after flag.lockout_start 100 and not seen "/var/log/testtrack.log"
+    do:
+      - tip: She keeps a log of who she tests. cat /var/log/testtrack.log
+
+done_when: mail_read "imogen-vent"
+
+on_done:
+  - say: |
+      Two names left on  who.
+      Hold on. Don't answer her. Imogen has a plan.

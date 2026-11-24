@@ -1,0 +1,26 @@
+from: Adaeze Okafor <aokafor@testdesign>
+subject: the queue
+body: |
+  Mr. Rattman,
+
+  She has put my name first on her list. I think she has been waiting
+  to do that for a long time.
+
+  I'll be brief. You have seen the subject queue. The order it is read
+  in is not kept in /srv. The queue file you read is a copy. The real
+  order lives on the central drive, /mnt/glados, and it can only be
+  mounted at Tier 3. I wrote that rule. I thought of it as a safety.
+
+  Number 1498. I flagged that entry myself. "Persistent. Do not test."
+  I wrote it because the tenacity score was 9.9, and I did not want
+  to find out what a 9.9 does to a test. That was the whole reason. It
+  wasn't mercy, I'm sorry to say. It was cowardice.
+
+  Whatever happens next, the first name on that list is the next person
+  she wakes up. I don't think she should pick them. I think somebody who
+  cares ought to.
+
+  I'm sorry about all of it. I told them it was safe.
+  
+  Goodbye, Doug.
+  A. Okafor

@@ -319,7 +319,22 @@ const l9 = type('mail');
 const n9 = (l9.match(/(\d+)\s+GLaDOS[^\n]*thank you/) || [])[1];
 check('her thank you mail', !!n9);
 type('mail ' + n9);
-check('chapter 9 done', state.chapter !== 'anger');
+check('chapter 9 done', state.chapter === 'lockout');
+
+// ---- chapter 10: lockout ----
+check('prompt changed', world.shell.prompt().includes('[central]'));
+check('sudo refused politely', type('sudo systemctl stop glados').includes('central says no'));
+check('kill refused politely', type('kill 118').includes('declined, very politely'));
+check('systemctl stop refused', (() => { try { return String(type('systemctl stop glados')).includes('refused'); } catch (e) { return true; } })());
+tick(100);
+check('only doug and imogen are left', state.headcount === 2 && Object.keys(state.gone).length === 10 && type('who').split('\n').length === 2);
+check('test track written', type('cat /var/log/testtrack.log').includes('chamber 04'));
+const l10 = type('mail');
+check('last mails', l10.includes('the queue') && l10.includes('sorry, Doug'));
+const n10 = (l10.match(/(\d+)\s+Imogen[^\n]*not the fixtures/) || [])[1];
+check('imogen mail', !!n10);
+type('mail ' + n10);
+check('chapter 10 done', state.chapter !== 'lockout');
 check('save round trips ch5', JSON.parse(JSON.stringify(world.save())).flags.report_curiosity === true);
 
 // idle nudge

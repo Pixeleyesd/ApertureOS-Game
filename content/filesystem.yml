@@ -40,6 +40,8 @@ files:
     src: etc/cron.d/central
   - path: /var/log/cafeteria-orders.log
     src: var/log/cafeteria-orders.log
+  - path: /var/log/testtrack.log
+    src: var/log/testtrack.log
   - path: /var/log/corectl.log
     src: var/log/corectl.log
   - path: /var/mail/drattman
