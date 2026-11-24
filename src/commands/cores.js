@@ -34,7 +34,8 @@ const reportPath = (s, name) => `/home/drattman/reports/AS-114-${name}.txt`;
 function listing(s) {
   const rows = ORDER.map((n) => {
     let st = 'waiting';
-    if (s.flags['out_' + n]) st = s.flags['report_' + n] ? 'done, reported' : 'done, report due';
+    if (s.flags['attached_' + n]) st = 'attached to her';
+    else if (s.flags['out_' + n]) st = s.flags['report_' + n] ? 'done, reported' : 'done, report due';
     else if (s.core === n) st = 'in the cradle now';
     else if (n === nextCore(s)) st = 'next';
     if (n === 'morality' && s.flags.morality_seated) st = s.flags.morality_down ? 'primary socket: OFFLINE' : 'primary socket (lab-seated)';
@@ -126,6 +127,31 @@ const corectl = {
         '',
         'Policy 11-C wants an AS-114 for every core. Start yours with:  report new',
       ].join('\n');
+    }
+
+    if (verb === 'reseat') {
+      const name = (args.filter((a) => !a.startsWith('-'))[1] || '').toLowerCase();
+      if (!s.flags.tier3) throw new ShellError('corectl: reseat is Tier 3 only.');
+      if (name !== 'morality') throw new ShellError('corectl: only the primary socket can be reseated remotely.  corectl reseat morality');
+      if (!s.flags.morality_down) return 'corectl: MC-01 is already live in the primary socket.';
+      if (!s.flags.bus_b_ok) throw new ShellError('corectl: the primary socket has no power. Bus B is still dead.\n(Somebody has to reset panel B, down in the annex, before this will take. Keep her busy for a minute.)');
+      setFlag(s, 'morality_down', false);
+      setFlag(s, 'morality_back', true);
+      return ['Primary socket: bus B live.', 'MC-01 morality: reseating ...', 'MC-01 morality: seated, checksum ok. constraint set 11 of 11 loading.'].join('\n');
+    }
+
+    if (verb === 'attach') {
+      const name = (args.filter((a) => !a.startsWith('-'))[1] || '').toLowerCase();
+      if (!s.flags.tier3) throw new ShellError('corectl: attach is Tier 3 only.');
+      if (!s.flags.morality_back) throw new ShellError('corectl: seat MC-01 first. Nothing else will hold without it.');
+      const four = ORDER.filter((n) => n !== 'morality');
+      const list = name === 'all' ? four : four.filter((n) => n === name);
+      if (!list.length) throw new ShellError('corectl: attach which core? corectl attach all   (or one of: ' + four.join(', ') + ')');
+      const lines = [];
+      for (const n of list) { if (!s.flags['attached_' + n]) { setFlag(s, 'attached_' + n, true); lines.push(`${CORES[n].id} ${n}: attached to the central chassis. permanent.`); } }
+      if (!lines.length) return 'corectl: those are already attached.';
+      if (four.every((n) => s.flags['attached_' + n])) { setFlag(s, 'cores_attached', true); lines.push('', 'Every core is now attached to her. None of them will come out again.'); }
+      return lines.join('\n');
     }
 
     throw new ShellError(`corectl: I don't know "${verb}". Try:  corectl list   corectl status   corectl insert <name>   corectl eject`);

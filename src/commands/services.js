@@ -80,6 +80,10 @@ export default [
           'Watch it come up with:   tail -f /var/log/glados.log      (Ctrl+C to stop watching)',
         ].join('\n');
       }
+      if (s.flags.tier3 && ['stop', 'restart', 'disable', 'kill'].includes(verb)) {
+        setFlag(s, 'tried_stop', true);
+        throw new ShellError(`Failed to ${verb} ${name}.service: Unit is protected.\n(glados.service lists glados.service as the only account allowed to change it.)`);
+      }
       if (s.flags.shell_locked && ['stop', 'restart', 'disable', 'kill'].includes(verb)) {
         throw new ShellError(`Failed to ${verb} ${name}.service: central has refused the request.\n(It says it is "not that kind of service any more".)`);
       }

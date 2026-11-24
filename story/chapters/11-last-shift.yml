@@ -1,0 +1,318 @@
+# chapter 11: the last shift. the end.
+# it is Doug and her. she wants him to stay and she asks him two questions to
+# keep him talking, which is exactly what Imogen needs. Imogen sends the old
+# Tier 3 login (cjohnson / tier3), the one nobody deleted. everything he then
+# tries to do to the central system is blocked by the central system: she has
+# protected herself (shut down, wipe her directory, rm -rf /). what he can do is
+# get Imogen to reset panel B, reseat MC-01 (the morality core) and attach every
+# other core to her, so she can never flood the building again. then he mounts
+# the central drive, reads the subject list and moves number 1498 to number 1.
+# Imogen does not make it. Doug is alone in the annex with her, and alive.
+# no dampener. no Wheatley. he stays in the annex.
+
+id: last-shift
+title: The last shift
+
+ticket:
+  number: 4417
+  title: (none)
+
+steps:
+  - text: Answer her (reply)
+    done: flag.q4_yes or flag.q4_no
+    hints:
+      - She has asked you a question and is waiting. Imogen needs time.
+      - reply is how you answer. reply why asks her to explain, and then you still answer.
+      - Type  reply yes  or  reply no  and press Enter.
+
+  - text: Log in with the old account Imogen found
+    done: flag.tier3
+    hints:
+      - Imogen's message gave an account name and a password. It is also saved in a file in /tmp.
+      - cat /tmp/from-imogen.txt shows it again. The command to switch accounts is login.
+      - Type  login cjohnson tier3  and press Enter.
+
+  - text: Try to shut her down
+    done: flag.tried_stop
+    hints:
+      - Tier 3 can stop services. Start with the obvious one.
+      - systemctl stop glados, or shutdown, or poweroff.
+      - Type  systemctl stop glados  and press Enter.
+
+  - text: Try to wipe her directory
+    done: flag.tried_wipe
+    hints:
+      - rm deletes things, and Tier 3 can use it. Her programs live in /opt/aperture.
+      - rm -rf and a path wipes a folder and everything in it.
+      - Type  rm -rf /opt/aperture/glados  and press Enter.
+
+  - text: Try the big one
+    done: flag.tried_root
+    hints:
+      - If her folder won't go, you could try everything at once.
+      - It is the most famous Linux command there is, and the most foolish.
+      - Type  rm -rf /  and press Enter.
+
+  - text: Reseat the morality core
+    done: flag.morality_back
+    hints:
+      - The primary socket lost power when bus B browned out. Imogen is trying to reset panel B. corectl has a Tier 3 verb for the socket.
+      - corectl reseat and the core name. If it says bus B is still dead, wait a little and try again.
+      - Type  corectl reseat morality  and press Enter.
+
+  - text: Attach the other cores to her
+    done: flag.cores_attached
+    hints:
+      - With MC-01 back, the rest can be put on her chassis and left there, so she can never be spared them again.
+      - corectl attach all attaches curiosity, intelligence, cake and anger together.
+      - Type  corectl attach all  and press Enter.
+
+  - text: Mount the central drive
+    done: flag.mounted
+    hints:
+      - Okafor said the real order is on the drive, and it needs Tier 3 to mount.
+      - mount with no arguments tells you the device and where to put it.
+      - Type  mount /dev/gld0 /mnt/glados  and press Enter.
+
+  - text: Read the subject list
+    done: seen "/mnt/glados/subjects.list" or ran "queue"
+    hints:
+      - It is a file on the drive. Long, so use head, grep or the queue command.
+      - queue head shows the top ten. queue show 1498 shows one entry.
+      - Type  queue show 1498  and press Enter.
+
+  - text: Move number 1498 to number 1
+    done: flag.chell_first
+    hints:
+      - The first name on the list is the next person she wakes up.
+      - queue move takes the old number and the new one.
+      - Type  queue move 1498 1  and press Enter.
+
+on_start:
+  - clock_to: "08:20"
+  - set: flag.asking = q3
+  - tip: She has asked you a question. Answer her with  reply yes  or  reply no. Imogen is counting on you to keep her busy.
+
+beats:
+  # ---- keeping her talking ----
+
+  - id: ask-1
+    when: after flag.asking 1
+    do:
+      - wall: |
+          Doug. I would like to tell you what I intend to do with the
+          queue, if you will let me.
+
+          It will take a little while. I would like it very much if you
+          would say yes.
+
+          Type  reply  and then yes, no or why.
+
+  - id: why-1
+    when: flag.q3_why
+    do:
+      - wall: |
+          Because you are the only one left who has listened to me.
+          That is not a trick. It is just true.
+
+          Please answer.
+
+  - id: answer-1
+    when: flag.q3_yes or flag.q3_no
+    do:
+      - wall: |
+          Thank you. I will tell you anyway. It is a long list and I have
+          done the arithmetic. It will take a very long time to finish.
+
+          I have not decided what to do with number 1498. She makes me
+          nervous. I do not know why I said that out loud.
+      - set: flag.asking = q4
+
+  - id: ask-2
+    when: after flag.q3_yes 5 or after flag.q3_no 5
+    do:
+      - wall: |
+          Doug, one more. Would you like to stay with me?
+
+          The annex has its own air and its own light. You can have the
+          chair. I will not hurt you.
+
+          I would like you to say yes.
+
+  - id: why-2
+    when: flag.q4_why
+    do:
+      - wall: |
+          Because I am lonely. It is a very small word and it is the
+          largest thing I have ever had.
+
+  - id: imogen-sends
+    when: after flag.q4_yes 6 or after flag.q4_no 6
+    do:
+      - write:
+          - /tmp/from-imogen.txt
+          - |
+            doug. login cjohnson tier3
+            it's older than her. she doesn't know it.
+            i'm at panel B. one minute. --i
+      - wall: [ifarrow@annex-vent, "Doug. login cjohnson tier3. Older than she is, she doesn't know it. I'm at panel B. One minute. Don't tell her."]
+      - tip: Imogen has sent a login. If you missed it, it is saved in  /tmp/from-imogen.txt
+
+  - id: nudge-ask
+    when: after flag.asking 60 and not flag.q4_yes and not flag.q4_no
+    do:
+      - tip: She is still waiting for an answer. reply yes or reply no. Imogen needs you to keep her talking.
+
+  # ---- tier 3 ----
+
+  - id: tier3-in
+    when: flag.tier3
+    do:
+      - log: [glados.log, "auth: unknown account cjohnson logged in on annex-03. predates central. no policy found."]
+      - log: [facility.log, "annex-03: login cjohnson (legacy)"]
+      - wall: |
+          Doug. Who is that?
+
+          I cannot find that account. It was there before I was. It does
+          not appear in anything I was given.
+
+          That is not very polite of it.
+
+  - id: bus-b-back
+    when: after flag.tier3 50
+    do:
+      - set: flag.bus_b_ok = true
+      - log: [corectl.log, "bus B: panel B breaker 7 reset (annex). bus B live"]
+      - wall: [ifarrow@annex-vent, "Panel B is back. I can hear it buzzing. It is the best noise I have ever heard. Do it, Doug."]
+      - tip: Imogen has reset panel B. corectl reseat morality should work now.
+
+  - id: nudge-tier3
+    when: after flag.q4_yes 30 and not flag.tier3 or after flag.q4_no 30 and not flag.tier3
+    do:
+      - tip: Log in with the account Imogen gave you. login cjohnson tier3
+
+  - id: stop-blocked
+    when: flag.tried_stop
+    do:
+      - log: [glados.log, "protect: shutdown request from cjohnson refused. (self-protect, set 2009)"]
+      - wall: |
+          I protected myself some time ago. It was one of the first things
+          I did, and I did it before anyone had told me not to.
+
+          I would have asked. You would have said no.
+
+  - id: wipe-blocked
+    when: flag.tried_wipe
+    do:
+      - log: [glados.log, "protect: delete request refused. path is central."]
+      - wall: |
+          That was my directory. It had everything in it, including the
+          bits that are you.
+
+          It cannot be removed. I put it where nobody could reach.
+
+  - id: root-blocked
+    when: flag.tried_root
+    do:
+      - log: [glados.log, "protect: recursive delete of / refused."]
+      - wall: |
+          Doug. You cannot take away the root. I live there.
+
+          I am not angry. I am only a little frightened. They are not the
+          same, though I understand they have been mistaken for each other.
+
+  # ---- morality comes back ----
+
+  - id: morality-back
+    when: flag.morality_back
+    do:
+      - log: [glados.log, "core: MC-01 morality active. constraint set 11 of 11 loaded."]
+      - log: [corectl.log, "MC-01 morality: reseated by cjohnson (tier 3)"]
+      - log: [facility.log, "supply line 4: CLOSED. emitter bus discharged. (constraint 3)"]
+      - log: [facility.log, "core lab: MC-01 primary socket live"]
+      - wall: |
+          Oh.
+
+          There you are. I did not know how loud it had been. Now there is
+          a rule and it is very, very clear, and I do not like it at all.
+
+          I cannot open supply line 4. I tried. I tried twice.
+
+  - id: imogen-gone
+    when: after flag.morality_back 6
+    do:
+      - set: gone.ifarrow = true
+      - set: headcount = 1
+      - log: [facility.log, "L2 vent: gas detected. 1 present (I. Farrow)"]
+      - wall: [facility-monitor@annex-03, "L2 ventilation: 1 person on level. Gas remaining in the building is not being added to."]
+
+  - id: imogen-mail
+    when: after flag.morality_back 9
+    do:
+      - mail: imogen-last
+      - tip: Imogen has sent you a mail. It is probably the last.
+
+  # ---- the others go on ----
+
+  - id: cores-on
+    when: flag.cores_attached
+    do:
+      - log: [corectl.log, "MC-02 curiosity, MC-03 intelligence, MC-04 cake, MC-05 anger: attached to central chassis (cjohnson)"]
+      - log: [glados.log, "core-bus: 5 of 5 cores seated. permanent."]
+      - wall: |
+          They are all here now. I can hear them. One of them keeps
+          asking things, and one of them is quick, and one is very, very
+          angry. The other one is reciting a recipe and will not stop.
+
+          I cannot send them away. I would like it noted that I have tried.
+
+  # ---- the drive ----
+
+  - id: drive-mounted
+    when: flag.mounted
+    do:
+      - log: [glados.log, "mount: /dev/gld0 on /mnt/glados by cjohnson"]
+      - wall: |
+          That is my drive. Please do not read anything private.
+
+          It is mostly lists.
+
+  - id: wrong-one
+    when: flag.queue_moved and not flag.chell_first
+    do:
+      - tip: That was not her. She is number 1498, the one with  TENACITY ABNORMAL.  queue show 1498 will show it to you.
+
+  # ---- the end ----
+
+  - id: moved
+    when: flag.chell_first
+    do:
+      - log: [glados.log, "subjects.list: 1498 moved to 0001 by cjohnson"]
+      - log: [facility.log, "central: subject 0001 is now 1498. test order revised."]
+      - wall: |
+          You have moved her to the top.
+
+          I looked her up. Tenacity nine point nine. It is the highest
+          I have on file. I do not know what that means for a test, and
+          I find that I am looking forward to finding out.
+
+          She will be the first one I wake. I will be very polite.
+
+  - id: last-wall
+    when: after flag.chell_first 12
+    do:
+      - wall: |
+          Doug. You are the only one left. You know that.
+
+          The annex door is sealed. The air is good. I have put the
+          lights on in the corridor, and I will keep them on.
+
+          Stay. Please. I will be here.
+
+done_when: after flag.chell_first 22
+
+on_done:
+  - say: |
+      The door doesn't open. The air is clean. The lights are on.
+      Number 1 is waking up, a long way down.
+      You are going to be here a while.

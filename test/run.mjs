@@ -334,7 +334,38 @@ check('last mails', l10.includes('the queue') && l10.includes('sorry, Doug'));
 const n10 = (l10.match(/(\d+)\s+Imogen[^\n]*not the fixtures/) || [])[1];
 check('imogen mail', !!n10);
 type('mail ' + n10);
-check('chapter 10 done', state.chapter !== 'lockout');
+check('chapter 10 done', state.chapter === 'last-shift');
+
+// ---- chapter 11: the last shift ----
+check('she asks', (() => { const o = tick(3); return o.includes('what I intend to do') && state.flags.asking === 'q3'; })());
+type('reply why');
+type('reply yes');
+tick(8);
+type('reply no');
+const t11 = tick(10);
+check('imogen sends the login', t11.includes('cjohnson tier3') && world.fs.read('/tmp/from-imogen.txt').includes('tier3'));
+check('wrong login fails', (() => { try { return String(type('login cjohnson nope')).includes('incorrect'); } catch (e) { return true; } })());
+check('rm blocked before login', type('rm -rf /').includes('Tier 3'));
+check('login', type('login cjohnson tier3').includes('Tier 3'));
+check('prompt is cjohnson', world.shell.prompt().startsWith('cjohnson@'));
+check('shutdown blocked', type('systemctl stop glados').includes('protected') && state.flags.tried_stop);
+check('wipe blocked', type('rm -rf /opt/aperture/glados').includes('not permitted') && state.flags.tried_wipe);
+check('rm -rf / blocked', type('rm -rf /').includes('dangerous') && state.flags.tried_root);
+check('poweroff blocked too', type('poweroff').includes('declined'));
+check('reseat waits for panel B', type('corectl reseat morality').includes('Bus B is still dead'));
+tick(55);
+check('reseat morality', type('corectl reseat morality').includes('seated') && state.flags.morality_back === true);
+check('status shows morality live', !type('corectl status').includes('OFFLINE'));
+tick(10);
+check('imogen is lost', state.headcount === 1 && state.gone.ifarrow === true);
+check('attach all', type('corectl attach all').includes('attached to her') || state.flags.cores_attached === true);
+check('mount drive', type('mount /dev/gld0 /mnt/glados').includes('attached'));
+check('queue show', type('queue show 1498').includes('CHELL'));
+check('wrong move does not end', (() => { type('queue move 5 1'); return !state.flags.chell_first; })());
+check('move chell to 1', (() => { type('queue move 1498 1'); return state.flags.chell_first === true; })());
+check('chell is number 1', type('queue head').split('\n')[0].includes('CHELL'));
+tick(30);
+check('chapter 11 done and game over', state.chapter === 'end');
 check('save round trips ch5', JSON.parse(JSON.stringify(world.save())).flags.report_curiosity === true);
 
 // idle nudge

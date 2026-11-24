@@ -8,6 +8,7 @@ dirs:
   - /home/drattman/outbox
   - /opt/aperture/bin
   - /tmp
+  - /mnt/glados
 
 files:
   - path: /etc/motd
